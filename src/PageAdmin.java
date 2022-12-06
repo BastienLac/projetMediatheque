@@ -1,22 +1,59 @@
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 
 public class PageAdmin implements ActionListener {
+    private static Object[][] data;
+    private static String[] columnNames;
 
     public static void main(){
         JFrame adminpage = new JFrame("Administarateur");
         adminpage.setSize(1000, 1000);
-        adminpage.setLocation(200, 150);
-        JLabel labelM = new JLabel("Bienvenue à la page administateur : ");
-        adminpage.setLayout(null);
+        adminpage.setLocation(100, 50);
 
-        labelM.setBounds(50, 50, 200, 30);
-        JTextField text_field = new JTextField();
-        text_field.setBounds(50, 100, 200, 30);
-        JFrame.setDefaultLookAndFeelDecorated(true);
-        adminpage.add(labelM);
-        adminpage.add(text_field);
+        // label bienvenue
+        JLabel bienvenue = new JLabel("Bienvenue à la page administateur : ");
+        adminpage.setLayout(null);
+        bienvenue.setBounds(50, 70, 200, 130);
+        adminpage.add(bienvenue);
+
+        //checkbox
+        //String s1[] = { "DVD", "JeuVideo", "Livre" };
+        //JComboBox combobox = new JComboBox(s1);
+        //combobox.setBounds(50, 180, 200, 30);
+        //adminpage.add(combobox);
+
+        //suppression
+        JLabel suppression = new JLabel("Selectionner le media que vous voulez supprimer  ");
+        suppression.setBounds(50, 105, 350, 150);
+        adminpage.add(suppression);
+
+        // table
+        data = new Object[][] {{"101", "Ramesh"}, {"102", "Adithya"}, {"103", "Jai"}, {"104", "Sai"}};
+        columnNames = new String[] {"ID", "Name"};
+        DefaultTableModel model = new DefaultTableModel(data, columnNames);
+        JTable table = new JTable(model);
+        table.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        adminpage.add(table);
+        table.setBounds(50, 230, 320, 80);
+
+        //button
+        JButton button= new JButton("Supprimer");
+        button.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                // check for selected row first
+                if(table.getSelectedRow() != -1) {
+                    // remove selected row from the model
+                    model.removeRow(table.getSelectedRow());
+                    JOptionPane.showMessageDialog(null, "Vous avez bien supprimé le media");
+                }
+            }
+        });
+        button.setBounds(50, 360, 320, 30);
+        adminpage.add(button);
+
         adminpage.setVisible(true);
         adminpage.setLayout(null);
     }
