@@ -44,12 +44,11 @@ public class ConnexionBoutonListener implements ActionListener {
                 st.setString(2, mdp);
                 ResultSet rs = st.executeQuery();
                 if(rs.next()){
-                    // new Jframe
+                    PageUtilisateur.main();
                 }
             } catch (Exception ex) {
                 System.out.println(e);
             }
-
         }
     }
 }
