@@ -1,26 +1,24 @@
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.*;
-import java.sql.*;
 
 public class PageAdmin implements ActionListener {
 
     public static void main(){
-            JPanel connexionPanel = new JPanel();
-            JFrame jf = new JFrame("Administrateur");
+        JFrame adminpage = new JFrame("Administarateur");
+        adminpage.setSize(1000, 1000);
+        adminpage.setLocation(200, 150);
+        JLabel labelM = new JLabel("Bienvenue à la page administateur : ");
+        adminpage.setLayout(null);
 
-            JLabel PageAdminLabel = new JLabel("Bonjour, bienvenue a votre page administrateur", JLabel.CENTER);
-            PageAdminLabel.setFont(new Font("Times New Roman", Font.PLAIN, 16));
-            Dimension tailleMoniteur = Toolkit.getDefaultToolkit().getScreenSize();
-            jf.setSize(tailleMoniteur.width, tailleMoniteur.height);
-
-
-            PageAdmin cbl = new PageAdmin();;
-            jf.add(PageAdminLabel);
-            jf.setVisible(true);
-            jf.setLocationRelativeTo(null);
-            jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        labelM.setBounds(50, 50, 200, 30);
+        JTextField text_field = new JTextField();
+        text_field.setBounds(50, 100, 200, 30);
+        JFrame.setDefaultLookAndFeelDecorated(true);
+        adminpage.add(labelM);
+        adminpage.add(text_field);
+        adminpage.setVisible(true);
+        adminpage.setLayout(null);
     }
 
     @Override
