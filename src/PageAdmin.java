@@ -2,6 +2,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.border.*;
+import javax.swing.table.*;
+import java.awt.*;
 
 public class PageAdmin implements ActionListener {
     private static Object[][] data;
@@ -15,7 +18,7 @@ public class PageAdmin implements ActionListener {
         // label bienvenue
         JLabel bienvenue = new JLabel("Bienvenue à la page administateur : ");
         adminpage.setLayout(null);
-        bienvenue.setBounds(50, 70, 200, 130);
+        bienvenue.setBounds(50, 70, 300, 130);
         adminpage.add(bienvenue);
 
         //checkbox
@@ -36,7 +39,8 @@ public class PageAdmin implements ActionListener {
         JTable table = new JTable(model);
         table.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         adminpage.add(table);
-        table.setBounds(50, 230, 320, 80);
+        table.setBounds(50, 230, 520, 400);
+
 
         //button
         JButton button= new JButton("Supprimer");
@@ -51,8 +55,18 @@ public class PageAdmin implements ActionListener {
                 }
             }
         });
-        button.setBounds(50, 360, 320, 30);
+        button.setBounds(720, 360, 100, 30);
         adminpage.add(button);
+
+        JButton addData= new JButton("Ajouter");
+        button.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                model.insertRow(table.getRowCount(),new Object[]{"Sushil","600"});
+            }
+        });
+        addData.setBounds(760, 360, 100, 30);
+        adminpage.add(addData);
 
         adminpage.setVisible(true);
         adminpage.setLayout(null);
