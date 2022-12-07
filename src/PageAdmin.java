@@ -2,13 +2,25 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.border.*;
-import javax.swing.table.*;
-import java.awt.*;
-
-public class PageAdmin implements ActionListener {
+import java.sql.*;
+public class PageAdmin  {
     private static Object[][] data;
     private static String[] columnNames;
+    /*public int PageAdmin() throws SQLException {
+        Connection conn = MySQLConnection.getConnexion();
+        try {
+            PreparedStatement st = conn.prepareStatement("SELECT * FROM categoriemedia");
+            ResultSet categoryMedia = st.executeQuery();
+            while(categoryMedia.next())
+                return categoryMedia.getInt(1);
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        conn.close();
+        return 0;
+    }*/
+
+
 
     public static void main(){
         JFrame adminpage = new JFrame("Administarateur");
@@ -56,7 +68,7 @@ public class PageAdmin implements ActionListener {
                 }
             }
         });
-        button.setBounds(220, 360, 100, 30);
+        button.setBounds(70, 360, 100, 30);
         adminpage.add(button);
 
         JButton addData= new JButton("Ajouter");
@@ -66,12 +78,12 @@ public class PageAdmin implements ActionListener {
 
                 JTextField id = new JTextField(16);
                 JTextField Name = new JTextField(16);
-                id.setBounds(465, 360, 100, 30);
-                Name.setBounds(565, 360, 100, 30);
+                id.setBounds(315, 360, 100, 30);
+                Name.setBounds(415, 360, 100, 30);
                 adminpage.add(id);
                 adminpage.add(Name);
                 JButton validation = new JButton("Valider");
-                validation.setBounds(665, 360, 180, 30);
+                validation.setBounds(515, 360, 130, 30);
                 adminpage.add(validation);
 
                 //if(Name.getText().equals("")) {Name.setText("entrer le nom");}
@@ -90,14 +102,14 @@ public class PageAdmin implements ActionListener {
                 });
             }
         });
-        addData.setBounds(360, 360, 100, 30);
+        addData.setBounds(210, 360, 100, 30);
         adminpage.add(addData);
         adminpage.setVisible(true);
         adminpage.setLayout(null);
-    }
 
-    @Override
-    public void actionPerformed(ActionEvent e) {
+
 
     }
+
+
 }
