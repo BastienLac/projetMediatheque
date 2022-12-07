@@ -28,18 +28,19 @@ public class PageAdmin implements ActionListener {
         //adminpage.add(combobox);
 
         //suppression
-        JLabel suppression = new JLabel("Selectionner le media que vous voulez supprimer  ");
-        suppression.setBounds(50, 105, 350, 150);
+        JLabel suppression = new JLabel("Pour supprimer une ligne, selectionner la puis cliquer sur supprimer ");
+        suppression.setBounds(50, 105, 450, 150);
         adminpage.add(suppression);
 
         // table
-        data = new Object[][] {{"101", "Ramesh"}, {"102", "Adithya"}, {"103", "Jai"}, {"104", "Sai"}};
+        data = new Object[][] {{"1", "CD1"}, {"2", "CD2"}, {"3", "CD3"}, {"4", "CD4"}};
         columnNames = new String[] {"ID", "Name"};
         DefaultTableModel model = new DefaultTableModel(data, columnNames);
         JTable table = new JTable(model);
         table.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-        adminpage.add(table);
-        table.setBounds(50, 230, 520, 400);
+        JScrollPane MyScrollPane= new JScrollPane(table);
+        MyScrollPane.setBounds(50, 230, 520, 100);
+        adminpage.add(MyScrollPane);
 
 
         //button
@@ -55,19 +56,42 @@ public class PageAdmin implements ActionListener {
                 }
             }
         });
-        button.setBounds(720, 360, 100, 30);
+        button.setBounds(220, 360, 100, 30);
         adminpage.add(button);
 
         JButton addData= new JButton("Ajouter");
-        button.addActionListener(new ActionListener() {
+        addData.addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed(ActionEvent ae) {
-                model.insertRow(table.getRowCount(),new Object[]{"Sushil","600"});
+            public void actionPerformed(ActionEvent a) {
+
+                JTextField id = new JTextField(16);
+                JTextField Name = new JTextField(16);
+                id.setBounds(465, 360, 100, 30);
+                Name.setBounds(565, 360, 100, 30);
+                adminpage.add(id);
+                adminpage.add(Name);
+                JButton validation = new JButton("Valider");
+                validation.setBounds(665, 360, 180, 30);
+                adminpage.add(validation);
+
+                //if(Name.getText().equals("")) {Name.setText("entrer le nom");}
+                //if(id.getText().equals("")) {id.setText("entrer l'id");}
+                validation.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        String s = e.getActionCommand();
+                        if (s.equals("Valider")) {
+                            String identifiant = id.getText();
+                            String nom = Name.getText();
+                            model.insertRow(table.getRowCount(),new Object[]{identifiant,nom});
+
+                }
+            }
+                });
             }
         });
-        addData.setBounds(760, 360, 100, 30);
+        addData.setBounds(360, 360, 100, 30);
         adminpage.add(addData);
-
         adminpage.setVisible(true);
         adminpage.setLayout(null);
     }
