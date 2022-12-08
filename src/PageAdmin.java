@@ -1,52 +1,63 @@
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.IdentityHashMap;
+
 public class PageAdmin  {
     private static Object[][] data;
     private static String[] columnNames;
-    /*public int PageAdmin() throws SQLException {
-        Connection conn = MySQLConnection.getConnexion();
-        try {
-            PreparedStatement st = conn.prepareStatement("SELECT * FROM categoriemedia");
-            ResultSet categoryMedia = st.executeQuery();
-            while(categoryMedia.next())
-                return categoryMedia.getInt(1);
-        } catch (Exception e) {
-            System.out.println(e);
-        }
-        conn.close();
-        return 0;
-    }*/
 
-
-
-    public static void main(){
+    public static void main() throws SQLException {
         JFrame adminpage = new JFrame("Administarateur");
         adminpage.setSize(1000, 1000);
         adminpage.setLocation(100, 50);
 
         // label bienvenue
-        JLabel bienvenue = new JLabel("Bienvenue à la page administateur : ");
+        JLabel bienvenue = new JLabel("Bienvenue à la page administateur ");
         adminpage.setLayout(null);
-        bienvenue.setBounds(50, 70, 300, 130);
+        bienvenue.setBounds(240, 70, 600, 130);
         adminpage.add(bienvenue);
+        bienvenue.setFont(new Font("Serif", Font.BOLD, 30));
+        // Changer la couleur du texte
+        bienvenue.setForeground(Color.DARK_GRAY);
 
-        //checkbox
-        //String s1[] = { "DVD", "JeuVideo", "Livre" };
-        //JComboBox combobox = new JComboBox(s1);
-        //combobox.setBounds(50, 180, 200, 30);
-        //adminpage.add(combobox);
 
+        //
+        JLabel tableau = new JLabel("Ci-joint le tableau des médias, vous pouvez en ajouter ou supprimer");
+        tableau.setBounds(50, 145, 550, 150);
+        adminpage.add(tableau);
         //suppression
-        JLabel suppression = new JLabel("Pour supprimer une ligne, selectionner la puis cliquer sur supprimer ");
-        suppression.setBounds(50, 105, 450, 150);
+        JLabel suppression = new JLabel("Pour supprimer une ligne, entre l'id de la ligne que vous désirez supprimer puis cliquez sur supprimer");
+        suppression.setBounds(50, 265, 750, 150);
         adminpage.add(suppression);
 
+        //ajout des données de la bdd
+        ArrayList<Media> allmedias = Media.getAll();
+        String[] mediasTitre = new String[5];
+        String[] mediasCreateur = new String[5];
+        int[] mediasAnnee = new int[5];
+        int[] mediasCategorie = new int[5];
+        for (int i = 0; i < 1; i++) {
+            mediasTitre[i] = allmedias.get(i).getTitre();
+        }
+        for (int i = 0; i < 1; i++) {
+            mediasCreateur[i] = allmedias.get(i).getCreateur();
+        }
+        for (int i = 0; i < 1; i++) {
+            mediasAnnee[i] = allmedias.get(i).getAnneeDeParution();
+        }
+        for (int i = 0; i < 1; i++) {
+            mediasCategorie[i] = allmedias.get(i).getCategorie();
+        }
+
         // table
-        data = new Object[][] {{"1", "CD1"}, {"2", "CD2"}, {"3", "CD3"}, {"4", "CD4"}};
-        columnNames = new String[] {"ID", "Name"};
+        data = new Object[][] {{1,mediasTitre[0],mediasCreateur[0], mediasAnnee[0],mediasCategorie[0]}, {2,mediasTitre[1],mediasCreateur[1], mediasAnnee[0],mediasCategorie[0]},};
+        columnNames = new String[] {"Id", "Titre","Créateur","Année de parution","IdCategorieMedia"};
+
         DefaultTableModel model = new DefaultTableModel(data, columnNames);
         JTable table = new JTable(model);
         table.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
@@ -54,48 +65,66 @@ public class PageAdmin  {
         MyScrollPane.setBounds(50, 230, 520, 100);
         adminpage.add(MyScrollPane);
 
-
         //button
         JButton button= new JButton("Supprimer");
+        JTextField iDTODELETE = new JTextField();
+        iDTODELETE.setBounds(70, 400, 100, 30);
+        adminpage.add(iDTODELETE);
         button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
                 // check for selected row first
-                if(table.getSelectedRow() != -1) {
-                    // remove selected row from the model
-                    model.removeRow(table.getSelectedRow());
-                    JOptionPane.showMessageDialog(null, "Vous avez bien supprimé le media");
+
+                try {
+                    Connection conn = MySQLConnection.getConnexion();
+                    PreparedStatement st = conn.prepareStatement("DELETE FROM media WHERE id= ?");
+                    st.setString(1,iDTODELETE.getText());
+                    st.executeUpdate();
                 }
+                catch(Exception e){
+                    System.out.println(e);
+                }
+                model.removeRow(Integer.parseInt(iDTODELETE.getText())-1);
+                JOptionPane.showMessageDialog(null, "Vous avez bien supprimé le media");
             }
         });
         button.setBounds(70, 360, 100, 30);
         adminpage.add(button);
-
         JButton addData= new JButton("Ajouter");
         addData.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent a) {
 
                 JTextField id = new JTextField(16);
-                JTextField Name = new JTextField(16);
+                JTextField titre = new JTextField(16);
+                JTextField createur = new JTextField(16);
+                JTextField anneeDeParution = new JTextField(16);
+                JTextField category = new JTextField(16);
                 id.setBounds(315, 360, 100, 30);
-                Name.setBounds(415, 360, 100, 30);
+                titre.setBounds(415, 360, 100, 30);
+                createur.setBounds(515, 360, 100, 30);
+                anneeDeParution.setBounds(615, 360, 100, 30);
+                category.setBounds(715, 360, 100, 30);
                 adminpage.add(id);
-                adminpage.add(Name);
+                adminpage.add(titre);
+                adminpage.add(createur);
+                adminpage.add(anneeDeParution);
+                adminpage.add(category);
                 JButton validation = new JButton("Valider");
-                validation.setBounds(515, 360, 130, 30);
+                validation.setBounds(815, 360, 130, 30);
                 adminpage.add(validation);
 
-                //if(Name.getText().equals("")) {Name.setText("entrer le nom");}
-                //if(id.getText().equals("")) {id.setText("entrer l'id");}
                 validation.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
                         String s = e.getActionCommand();
                         if (s.equals("Valider")) {
                             String identifiant = id.getText();
-                            String nom = Name.getText();
-                            model.insertRow(table.getRowCount(),new Object[]{identifiant,nom});
+                            String mediaTitre = titre.getText();
+                            String mediaAnnee = createur.getText();
+                            String mediaDate = anneeDeParution.getText();
+                            String mediaCategorie = category.getText();
+                            model.insertRow(table.getRowCount(),new Object[]{identifiant,mediaTitre,mediaAnnee,mediaDate,mediaCategorie});
 
                 }
             }
@@ -104,11 +133,10 @@ public class PageAdmin  {
         });
         addData.setBounds(210, 360, 100, 30);
         adminpage.add(addData);
+
+
         adminpage.setVisible(true);
         adminpage.setLayout(null);
-
-
-
     }
 
 
