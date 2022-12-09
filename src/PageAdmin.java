@@ -119,6 +119,7 @@ public class PageAdmin  {
                     public void actionPerformed(ActionEvent e) {
                         String s = e.getActionCommand();
                         if (s.equals("Valider")) {
+
                             String identifiant = id.getText();
                             String mediaTitre = titre.getText();
                             String mediaAnnee = createur.getText();
@@ -126,6 +127,23 @@ public class PageAdmin  {
                             String mediaCategorie = category.getText();
                             model.insertRow(table.getRowCount(),new Object[]{identifiant,mediaTitre,mediaAnnee,mediaDate,mediaCategorie});
 
+                            try {
+                                int a = 7;
+                                Connection conn = MySQLConnection.getConnexion();
+                                PreparedStatement st = conn.prepareStatement("INSERT INTO media (`id`, `titre`, `createur`, `anneeDeParution`, `idCategorieMedia`) VALUES (?,?,?,?,?)");
+                                st.setString(1,identifiant);
+                                st.setString(2,mediaTitre);
+                                st.setString(3,mediaAnnee);
+                                st.setString(4,mediaDate);
+                                st.setString(5,mediaCategorie);
+
+                                st.executeUpdate();
+
+                            }
+                            catch(Exception exception){
+                                System.out.println(exception);
+                            }
+                            System.out.println(Integer.parseInt(identifiant));
                 }
             }
                 });
