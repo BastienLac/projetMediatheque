@@ -5,7 +5,14 @@ import java.sql.*;
 import java.util.ArrayList;
 
 public class PageAdmin {
-
+    static Object[][] data;
+    static String[] columnNames;
+    static DefaultTableModel model = new DefaultTableModel(data, columnNames);
+    static JTable table = new JTable(model);
+    static JTextField titre = new JTextField();
+    static JTextField createur = new JTextField();
+    static JTextField anneeDeParution = new JTextField();
+    static JTextField categorie = new JTextField();
     public static void main() throws SQLException {
 
         //creation du Jframe
@@ -44,8 +51,8 @@ public class PageAdmin {
         }
 
         // table
-        String[] columnNames = new String[]{"Titre", "Createur", "Annee de parution", "IdCategorieMedia"};
-        Object[][] data = new Object[allmedias.toArray().length][columnNames.length];
+        columnNames = new String[]{"Titre", "Createur", "Annee de parution", "IdCategorieMedia"};
+        data = new Object[allmedias.toArray().length][columnNames.length];
         for (int i = 0; i < allmedias.toArray().length; i++) {
             for (int j = 0; j < columnNames.length; j++) {
                 switch (j) {
@@ -56,8 +63,8 @@ public class PageAdmin {
                 }
             }
         }
-        DefaultTableModel model = new DefaultTableModel(data, columnNames);
-        JTable table = new JTable(model) {
+        model = new DefaultTableModel(data, columnNames);
+        table = new JTable(model) {
             //desactiver l'editeur de ligne
             public boolean editCellAt(int row, int column, java.util.EventObject e) {
                 return false;
@@ -76,16 +83,7 @@ public class PageAdmin {
         adminpage.add(deleteButton);
         deleteButton.addActionListener(ae -> {
             // check for selected row first
-            try {
-                Connection conn = MySQLConnection.getConnexion();
-                assert conn != null;
-                PreparedStatement st = conn.prepareStatement("DELETE FROM media WHERE titre= ? AND createur=?");
-                st.setString(1, table.getValueAt(table.getSelectedRow(), 0).toString());
-                st.setString(2, table.getValueAt(table.getSelectedRow(), 1).toString());
-                st.executeUpdate();
-            } catch (Exception e) {
-                System.out.println(e);
-            }
+            Media.supprimerMedia();
             model.removeRow(table.getSelectedRow());
             JOptionPane.showMessageDialog(null, "Vous avez bien supprime le media");
         });
@@ -100,10 +98,10 @@ public class PageAdmin {
             JLabel createurr = new JLabel("Createur :");
             JLabel anneeDeParutionn = new JLabel("Annee de parution :");
             JLabel categoriee = new JLabel("Id de la categorie :");
-            JTextField titre = new JTextField("");
-            JTextField createur = new JTextField("");
-            JTextField anneeDeParution = new JTextField("");
-            JTextField categorie = new JTextField("");
+            titre = new JTextField("");
+            createur = new JTextField("");
+            anneeDeParution = new JTextField("");
+            categorie = new JTextField("");
             adminpage.getContentPane().add(titree);
             adminpage.getContentPane().add(createurr);
             adminpage.getContentPane().add(anneeDeParutionn);
@@ -137,24 +135,7 @@ public class PageAdmin {
             validation.addActionListener(e -> {
                 String s = e.getActionCommand();
                 if (s.equals("Valider")) {
-                    String mediaTitre = titre.getText();
-                    String mediaAnnee = createur.getText();
-                    String mediaDate = anneeDeParution.getText();
-                    String mediaCategorie = categorie.getText();
-                    model.insertRow(table.getRowCount(), new Object[]{mediaTitre, mediaAnnee, mediaDate, mediaCategorie});
-
-                    try {
-                        Connection conn = MySQLConnection.getConnexion();
-                        assert conn != null;
-                        PreparedStatement st = conn.prepareStatement("INSERT INTO media (`titre`, `createur`, `anneeDeParution`, `idCategorieMedia`) VALUES (?,?,?,?)");
-                        st.setString(1, mediaTitre);
-                        st.setString(2, mediaAnnee);
-                        st.setString(3, mediaDate);
-                        st.setString(4, mediaCategorie);
-                        st.executeUpdate();
-                    } catch (Exception exception) {
-                        System.out.println(exception);
-                    }
+                    Media.ajouterMedia();
                 }
             });
         });

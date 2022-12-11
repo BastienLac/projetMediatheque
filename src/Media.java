@@ -50,4 +50,39 @@ public class Media {
         conn.close();
         return allmedia;
     }
+      public static void supprimerMedia() {
+        try {
+              Connection conn = MySQLConnection.getConnexion();
+              assert conn != null;
+              PreparedStatement st = conn.prepareStatement("DELETE FROM media WHERE titre= ? AND createur=?");
+              st.setString(1, PageAdmin.table.getValueAt(PageAdmin.table.getSelectedRow(), 0).toString());
+              st.setString(2, PageAdmin.table.getValueAt(PageAdmin.table.getSelectedRow(), 1).toString());
+              st.executeUpdate();
+          } catch (Exception e) {
+              System.out.println(e);
+          }
+        System.out.println(PageAdmin.table.getValueAt(PageAdmin.table.getSelectedRow(), 0).toString());
+      }
+      public static void ajouterMedia() {
+
+          String mediaTitre = PageAdmin.titre.getText();
+          String mediaAnnee = PageAdmin.categorie.getText();
+          String mediaDate = PageAdmin.anneeDeParution.getText();
+          String mediaCategorie = PageAdmin.categorie.getText();
+          PageAdmin.model.insertRow(PageAdmin.table.getRowCount(), new Object[]{mediaTitre, mediaAnnee, mediaDate, mediaCategorie});
+
+          try {
+              Connection conn = MySQLConnection.getConnexion();
+              assert conn != null;
+              PreparedStatement st = conn.prepareStatement("INSERT INTO media (`titre`, `createur`, `anneeDeParution`, `idCategorieMedia`) VALUES (?,?,?,?)");
+              st.setString(1, mediaTitre);
+              st.setString(2, mediaAnnee);
+              st.setString(3, mediaDate);
+              st.setString(4, mediaCategorie);
+              st.executeUpdate();
+          } catch (Exception exception) {
+              System.out.println(exception);
+          }
+
+      }
 }
