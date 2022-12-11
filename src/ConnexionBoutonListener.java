@@ -44,7 +44,11 @@ public class ConnexionBoutonListener implements ActionListener {
             Utilisateur utilisateur1 = Utilisateur.getUtilisateur(login, mdp);
             if(utilisateur1 != null){
                 if(utilisateur1.isEstAdmin()){
-                    // page admin
+                    try {
+                        PageAdmin.main();
+                    } catch (SQLException ex) {
+                        throw new RuntimeException(ex);
+                    }
                 }
                 else{
                     try {
@@ -55,7 +59,7 @@ public class ConnexionBoutonListener implements ActionListener {
                 }
             }
             else
-                txtLogin.setText("TES PAS CO");
+                JOptionPane.showMessageDialog(null, "Erreur, mdp ou login incorrect. Reessayez");
         } else if (s.equals("S'inscrire")) {
              InscriptionPage.main();
         } else if (s.equals("Valider")) {

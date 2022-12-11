@@ -25,7 +25,7 @@ public class PageUtilisateur {
 
         // Liste des categories media
         ArrayList<CategorieMedia> allCategorie = CategorieMedia.getAllCategorie();
-        String[] categories = new String[5];
+        String[] categories = new String[allCategorie.toArray().length];
         for (int i = 0; i < categories.length; i++) {
             categories[i] = allCategorie.get(i).getNom();
         }
