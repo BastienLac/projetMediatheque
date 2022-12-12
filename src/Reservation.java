@@ -8,7 +8,6 @@ public class Reservation {
         this.dateDebut = dateDebut;
         this.dateFin = dateFin;
     }
-
     public Date getDateDebut() {
         return dateDebut;
     }

@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class Media {
+    static ArrayList<String> typesSelected = new ArrayList<String>();
     protected String titre;
     protected String createur;
     protected int anneeDeParution;
@@ -16,7 +17,6 @@ public class Media {
         this.anneeDeParution = anneeDeParution;
         this.categorie = categorie;
     }
-
     public String getTitre() {
         return titre;
     }
@@ -61,28 +61,49 @@ public class Media {
           } catch (Exception e) {
               System.out.println(e);
           }
-        System.out.println(PageAdmin.table.getValueAt(PageAdmin.table.getSelectedRow(), 0).toString());
       }
-      public static void ajouterMedia() {
+      public static  void ajouterMedia() {
 
           String mediaTitre = PageAdmin.titre.getText();
-          String mediaAnnee = PageAdmin.categorie.getText();
+          String mediaCreateur = PageAdmin.createur.getText();
           String mediaDate = PageAdmin.anneeDeParution.getText();
           String mediaCategorie = PageAdmin.categorie.getText();
-          PageAdmin.model.insertRow(PageAdmin.table.getRowCount(), new Object[]{mediaTitre, mediaAnnee, mediaDate, mediaCategorie});
+          String typeSelected = PageAdmin.type.getSelectedItem().toString();
+          ArrayList<String> typesSelected = new ArrayList<String>();
+          typesSelected.add(typeSelected);
+          PageAdmin.model.insertRow(PageAdmin.table.getRowCount(), new Object[]{mediaTitre, mediaCreateur, mediaDate, mediaCategorie,typeSelected});
 
           try {
               Connection conn = MySQLConnection.getConnexion();
               assert conn != null;
               PreparedStatement st = conn.prepareStatement("INSERT INTO media (`titre`, `createur`, `anneeDeParution`, `idCategorieMedia`) VALUES (?,?,?,?)");
               st.setString(1, mediaTitre);
-              st.setString(2, mediaAnnee);
+              st.setString(2, mediaCreateur);
               st.setString(3, mediaDate);
               st.setString(4, mediaCategorie);
               st.executeUpdate();
+              conn.close();
           } catch (Exception exception) {
               System.out.println(exception);
           }
 
       }
+    public static  String recupererID() {
+
+        ArrayList<String> arrayList = new ArrayList<String>();
+        try {
+            Connection conn = MySQLConnection.getConnexion();
+            PreparedStatement st = conn.prepareStatement("SELECT * from media");
+            ResultSet media = st.executeQuery();
+            arrayList = new ArrayList<String>();
+            while (media.next()) {
+                arrayList.add(media.getString(1));
+            }
+            conn.close();
+        }
+        catch (Exception exception) {
+            System.out.println(exception);
+        }
+        return arrayList.get(PageAdmin.model.getRowCount()-1);
+    }
 }
