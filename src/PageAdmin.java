@@ -29,7 +29,7 @@ public class PageAdmin {
         //fixation des dimensions de la fenetre
         Dimension tailleMoniteur = Toolkit.getDefaultToolkit().getScreenSize();
         adminpage.setSize(tailleMoniteur.width, tailleMoniteur.height);
-        adminpage.setLocation(70, 50);
+
 
         // label bienvenue
         JLabel bienvenue = new JLabel("Bienvenue a la page administrateur ");
@@ -53,14 +53,14 @@ public class PageAdmin {
         ArrayList<Media> allmedias = Media.getAll();
 
         // comoBox
-        ArrayList<CategorieMedia> allCategorie = CategorieMedia.getAllCategorie();
+        ArrayList<CategorieMedia> allCategorie = CategorieMedia.getAllCategorieID();
         String[] categories = new String[allCategorie.toArray().length];
         for (int i = 0; i < categories.length; i++) {
             categories[i] = allCategorie.get(i).getNom();
         }
 
         // table
-        columnNames = new String[]{"Titre", "Createur", "Annee de parution", "IdCategorieMedia","Type"};
+        columnNames = new String[]{"Titre", "Createur", "Annee de parution", "IdCategorieMedia"};
         data = new Object[allmedias.toArray().length][columnNames.length];
         for (int i = 0; i < allmedias.toArray().length; i++) {
             for (int j = 0; j < columnNames.length; j++) {
@@ -69,7 +69,6 @@ public class PageAdmin {
                     case 1 : data[i][j] = allmedias.get(i).getCreateur(); break;
                     case 2 : data[i][j] = allmedias.get(i).getAnneeDeParution(); break;
                     case 3 : data[i][j] = allmedias.get(i).getCategorie();break;
-                    case 4 : data[i][j] = "";break;
                 }
             }
         }
@@ -147,6 +146,8 @@ public class PageAdmin {
             type = new JComboBox(types);
             adminpage.add(type);
             type.setBounds(600, 360, 100, 30);
+            type.setVisible(true);
+            adminpage.setBackground(Color.blue);
             nbChanson = new JTextField("");
             duree = new JTextField("");
             console= new JTextField("");
@@ -217,7 +218,7 @@ public class PageAdmin {
                 }
             });
 
-            //action lorsqu'on clique
+            //action lorsqu'on clique sur le bouton valider
             validation.addActionListener(e -> {
                 String s = e.getActionCommand();
                 String typeSelectede = type.getSelectedItem().toString();

@@ -1,12 +1,8 @@
-import javax.swing.*;
-import java.awt.*;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-
-import static java.awt.Font.BOLD;
 
 public class CategorieMedia {
     private String nom;
@@ -19,7 +15,7 @@ public class CategorieMedia {
         return nom;
     }
 
-    public static ArrayList<CategorieMedia> getAllCategorie() throws SQLException {
+    public static ArrayList<CategorieMedia> getAllCategorieID() throws SQLException {
         Connection conn = MySQLConnection.getConnexion();
         ArrayList<CategorieMedia> allCategorie = new ArrayList<>();
 

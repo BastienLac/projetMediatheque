@@ -8,7 +8,6 @@ public class Livre extends Media {
         super(titre, createur, anneeDeParution, categorie);
         this.nombrePage=nombrePage;
     }
-
     public static void ajouterLivre()  {
         String nbPagesText = PageAdmin.nbPages.getText();
         try {
@@ -21,5 +20,4 @@ public class Livre extends Media {
             System.out.println(exception);
         }
     }
-
 }

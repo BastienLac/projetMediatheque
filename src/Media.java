@@ -1,7 +1,4 @@
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 
 public class Media {
@@ -86,7 +83,6 @@ public class Media {
           } catch (Exception exception) {
               System.out.println(exception);
           }
-
       }
     public static  String recupererID() {
 
@@ -106,4 +102,52 @@ public class Media {
         }
         return arrayList.get(PageAdmin.model.getRowCount()-1);
     }
+   /* public static String  recupererType() {
+        ArrayList<String> arrayList = new ArrayList<String>();
+        ArrayList<String> arrayList2 = new ArrayList<String>();
+        ArrayList<String> arrayList3 = new ArrayList<String>();
+        ArrayList<String> arrayList4 = new ArrayList<String>();
+        ArrayList<String> arrayList5 = new ArrayList<String>();
+        try {
+            Connection conn = MySQLConnection.getConnexion();
+            PreparedStatement st = conn.prepareStatement("SELECT * from media");
+            ResultSet media = st.executeQuery();
+            ResultSetMetaData resultSetMetaData = media.getMetaData();
+            //Retrieving the column name
+            //String tableName = resultSetMetaData.getTableName(7);
+            while (media.next()) {
+                arrayList.add(media.getString(1));
+            }
+            conn.close();
+        } catch (Exception exception) {
+            System.out.println(exception);
+        }
+        try {
+            Connection conn = MySQLConnection.getConnexion();
+            PreparedStatement st = conn.prepareStatement("SELECT * from cd");
+            ResultSet media = st.executeQuery();
+            while (media.next()) {
+                arrayList2.add(media.getString(1));
+            }
+            System.out.println(arrayList2);
+            conn.close();
+            for(int i=0;i<arrayList.toArray().length;i++){
+                if(arrayList2.contains(arrayList.get(i))){
+                    return "CD";
+                }
+                else if(arrayList3.contains(arrayList.get(i))){
+                    return "DVD";
+                }
+                else if(arrayList4.contains(arrayList.get(i))){
+                    return "JV";
+                }
+                else if(arrayList5.contains(arrayList.get(i))){
+                    return "O";
+                }
+            }
+        } catch (Exception exception) {
+            System.out.println(exception);
+        }
+        return "";
+    }*/
 }

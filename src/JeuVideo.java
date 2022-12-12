@@ -1,5 +1,4 @@
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 
 public class JeuVideo extends Media {
@@ -15,7 +14,7 @@ public class JeuVideo extends Media {
         try {
             Connection conn = MySQLConnection.getConnexion();
             PreparedStatement st = conn.prepareStatement("INSERT INTO jeuvideo (`id`,`console`) VALUES (?,?)");
-            st.setString(1, recupererID());
+            st.setString(1, Media.recupererID());
             st.setString(2, consoleText);
             st.executeUpdate();
         } catch (Exception exception) {
