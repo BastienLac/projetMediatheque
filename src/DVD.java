@@ -12,7 +12,6 @@ public class DVD extends Media {
         this.duree = duree;
     }
 
-
     protected static ArrayList<Media> getMediaParCategorie(int idCateg) throws SQLException {
         Connection conn = MySQLConnection.getConnexion();
         ArrayList<Media> mediasParCateg = new ArrayList<>();
@@ -22,16 +21,29 @@ public class DVD extends Media {
             st.setInt(1, idCateg);
             ResultSet dvds = st.executeQuery();
 
-            while(dvds.next()) {
+            while (dvds.next()) {
                 Media dvd = new DVD(dvds.getString(2), dvds.getString(3), dvds.getInt(4), dvds.getInt(7));
                 mediasParCateg.add(dvd);
             }
-        }
-        catch(Exception e){
+        } catch (Exception e) {
             System.out.println(e);
         }
         conn.close();
 
         return mediasParCateg;
+    }
+
+    public static void ajouterDVD()  {
+        String dureeText = PageAdmin.duree.getText();
+        try {
+            Connection conn = MySQLConnection.getConnexion();
+            PreparedStatement st = conn.prepareStatement("INSERT INTO dvd (`id`,`duree`) VALUES (?,?)");
+            st.setString(1, Media.recupererID());
+            st.setString(2, dureeText);
+            st.executeUpdate();
+
+        } catch (Exception exception) {
+            System.out.println(exception);
+        }
     }
 }

@@ -6,9 +6,13 @@ import java.util.ArrayList;
 
 public class JeuVideo extends Media {
     protected String console;
-
     protected JeuVideo(String titre, String createur, int anneeDeParution, String console) {
         super(titre, createur, anneeDeParution);
+        this.console = console;
+    }
+
+    public JeuVideo(String titre, String console, String createur, int anneeDeParution, int categorie) {
+        super(titre, createur, anneeDeParution, categorie);
         this.console = console;
     }
 
@@ -21,16 +25,28 @@ public class JeuVideo extends Media {
             st.setInt(1, idCateg);
             ResultSet jvs = st.executeQuery();
 
-            while(jvs.next()) {
+            while (jvs.next()) {
                 Media jv = new JeuVideo(jvs.getString(2), jvs.getString(3), jvs.getInt(4), jvs.getString(7));
                 mediasParCateg.add(jv);
             }
-        }
-        catch(Exception e){
+        } catch (Exception e) {
             System.out.println(e);
         }
         conn.close();
 
         return mediasParCateg;
+    }
+
+    public static void ajouterJV()  {
+        String consoleText = PageAdmin.console.getText();
+        try {
+            Connection conn = MySQLConnection.getConnexion();
+            PreparedStatement st = conn.prepareStatement("INSERT INTO jeuvideo (`id`,`console`) VALUES (?,?)");
+            st.setString(1, Media.recupererID());
+            st.setString(2, consoleText);
+            st.executeUpdate();
+        } catch (Exception exception) {
+            System.out.println(exception);
+        }
     }
 }
