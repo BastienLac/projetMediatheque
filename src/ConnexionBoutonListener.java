@@ -20,12 +20,21 @@ public class ConnexionBoutonListener implements ActionListener {
 
             ConnexionBoutonListener cbl = new ConnexionBoutonListener();
             connexionButton.addActionListener(cbl);
+            JLabel connexionLoginLabel = new JLabel("Votre Login :", JLabel.CENTER);
+            connexionLoginLabel.setFont(new Font("Times New Roman", JLabel.CENTER, 14));
+            connexionLoginLabel.setBounds(80,70, 300, 40);
             txtLogin.setBounds(130,100, 200, 40);
-            txtMdp.setBounds(130,150, 200, 40);
-            connexionButton.setBounds(130, 200, 200, 40);
+
+            JLabel connexionMDPLabel = new JLabel("Votre mot de passe :", JLabel.CENTER);
+            connexionMDPLabel.setFont(new Font("Times New Roman", JLabel.CENTER, 14));
+            connexionMDPLabel.setBounds(80,140, 300, 40);
+            txtMdp.setBounds(130,170, 200, 40);
+            connexionButton.setBounds(130, 230, 200, 40);
             inscriptionButton.setBounds(20, 400, 150, 30);
             inscriptionButton.addActionListener(cbl);
 
+            connexionPanel.add(connexionLoginLabel);
+            connexionPanel.add(connexionMDPLabel);
             connexionPanel.add(connexionLabel);
             connexionPanel.add(txtLogin);
             connexionPanel.add(txtMdp);
