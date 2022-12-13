@@ -67,7 +67,9 @@ public class Media {
           String typeSelected = PageAdmin.type.getSelectedItem().toString();
           ArrayList<String> typesSelected = new ArrayList<String>();
           typesSelected.add(typeSelected);
-          PageAdmin.model.insertRow(PageAdmin.table.getRowCount(), new Object[]{mediaTitre, mediaCreateur, mediaDate, mediaCategorie,typeSelected});
+          if(mediaTitre.equals("") || mediaCreateur.equals("") ||mediaDate.equals("") || typeSelected.equals("")) {}
+          else{ PageAdmin.model.insertRow(PageAdmin.table.getRowCount(), new Object[]{mediaTitre, mediaCreateur, mediaDate, mediaCategorie,typeSelected});}
+
           try {
               Connection conn = MySQLConnection.getConnexion();
               assert conn != null;
