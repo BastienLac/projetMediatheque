@@ -37,6 +37,12 @@ public class Utilisateur {
         return estAdmin;
     }
 
+    /**
+     *
+     * @param {string} unLogin - Login de l'utilisateur
+     * @param {string} unMDP - Mot de passe de l'utilisateur
+     * @return {Utilisateur|null} L'utilisateur correspondant aux informations fournies. Null sinon.
+     */
     public static Utilisateur getUtilisateur(String unLogin, String unMDP){
         Connection conn = MySQLConnection.getConnexion();
         try{
@@ -59,6 +65,9 @@ public class Utilisateur {
         return null;
     }
 
+    /**
+     * Permet d'inscrire un utilisateur selon les données saisies par l'utilisateur
+     */
     public static void inscrireUtilisateur(){
         String nom = InscriptionPage.txtNom.getText();
         String prenom = InscriptionPage.txtPrenom.getText();
@@ -66,7 +75,8 @@ public class Utilisateur {
         String mdp = InscriptionPage.txtMdp.getText();
         Connection conn = MySQLConnection.getConnexion();
         try {
-            PreparedStatement st = conn.prepareStatement("INSERT INTO utilisateur (prenom, nom, login, mdp, estAdmin) VALUES (?,?,?,?,0)");
+            PreparedStatement st = conn.prepareStatement(
+                    "INSERT INTO utilisateur (prenom, nom, login, mdp, estAdmin) VALUES (?,?,?,?,0)");
             st.setString(1, prenom);
             st.setString(2, nom);
             st.setString(3, login);
