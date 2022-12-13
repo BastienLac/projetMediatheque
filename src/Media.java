@@ -1,10 +1,7 @@
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-public class Media {
+public abstract class Media {
     protected String titre;
     protected String createur;
     protected int anneeDeParution;
@@ -16,24 +13,24 @@ public class Media {
         this.anneeDeParution = anneeDeParution;
     }
     protected static ArrayList<Media> getMediaParCategorie(int idCateg) throws SQLException {
-        Connection conn = MySQLConnection.getConnexion();
-        ArrayList<Media> mediasParCateg = new ArrayList<>();
-
-        try {
-            PreparedStatement st = conn.prepareStatement("SELECT titre, createur, anneeDeParution FROM media m WHERE idCategorieMedia = ?");
-            st.setInt(1, idCateg);
-            ResultSet medias = st.executeQuery();
-
-            while(medias.next()) {
-                Media cd = new Media(medias.getString(1), medias.getString(2), medias.getInt(3));
-                mediasParCateg.add(cd);
-            }
+        ArrayList<Media> allMedias = new ArrayList<>();
+        if (CD.getMediaParCategorie(idCateg).size() > 0){
+            allMedias.addAll(CD.getMediaParCategorie(idCateg));
         }
-        catch(Exception e){
-            System.out.println(e);
-        }
-        conn.close();
 
-        return mediasParCateg;
+        if (DVD.getMediaParCategorie(idCateg).size() > 0){
+            allMedias.addAll(DVD.getMediaParCategorie(idCateg));
+        }
+
+        if (Livre.getMediaParCategorie(idCateg).size() > 0){
+            allMedias.addAll(Livre.getMediaParCategorie(idCateg));
+        }
+
+        if (JeuVideo.getMediaParCategorie(idCateg).size() > 0){
+            allMedias.addAll(JeuVideo.getMediaParCategorie(idCateg));
+        }
+
+        System.out.println("size " + allMedias.size());
+        return allMedias;
     };
 }

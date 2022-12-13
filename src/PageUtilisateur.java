@@ -1,4 +1,6 @@
 import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -14,7 +16,7 @@ public class PageUtilisateur {
     static Object[][] data;
     static String[] columnNames;
     static DefaultTableModel model = new DefaultTableModel(data, columnNames);
-    static JTable table = new JTable(model);
+
     public static void main(int[] idUtilisateur) throws SQLException {
         //creation du Jframe
         JFrame jf = new JFrame("Utilisateur");
@@ -23,7 +25,7 @@ public class PageUtilisateur {
         jf.setSize(tailleMoniteur.width, tailleMoniteur.height);
 
         // label bienvenue
-        JLabel bienvenue = new JLabel("Bienvenue a la page utiliateur ");
+        JLabel bienvenue = new JLabel("Bienvenue sur la page utiliateur ");
         jf.setLayout(null);
         bienvenue.setBounds(440, 70, 600, 130);
         jf.add(bienvenue);
@@ -56,11 +58,25 @@ public class PageUtilisateur {
         jf.getContentPane().add(jLabelChooseCategorie);
 
         String[] enteteTabMedia = {"titre", "createur", "année de parution"};
+        JTable tableMedias = new JTable(model) {
+            public boolean editCellAt(int row, int column, java.util.EventObject e) {
+                return false;
+            }
+        };
+
+        tableMedias.getTableHeader().setReorderingAllowed(false);
+        tableMedias.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+
+        JScrollPane MyScrollPane = new JScrollPane(tableMedias);
+        MyScrollPane.setBounds(50, 230, 520, 100);
+        MyScrollPane.setBorder(BorderFactory.createMatteBorder(2, 2, 2, 2, Color.blue));
+        jf.add(MyScrollPane);
+        MyScrollPane.setVisible(false);
 
         jComboBox.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+                tableMedias.getSelectionModel().clearSelection();
                 model.getDataVector().removeAllElements();
-                System.out.println("remove " + model.getRowCount());
 
                 CategorieMedia selectedCategorie = null;
                 try {
@@ -97,23 +113,11 @@ public class PageUtilisateur {
                     model.addRow(mediasByCateg[i]);
                 }
 
-                model.fireTableDataChanged();
                 model = new DefaultTableModel(mediasByCateg, enteteTabMedia);
+                model.fireTableDataChanged();
                 System.out.println(model.getRowCount());
-
-                table = new JTable(model) {
-                    //desactiver l'editeur de ligne
-                    public boolean editCellAt(int row, int column, java.util.EventObject e) {
-                        return false;
-                    }
-                };
-                table.getTableHeader().setReorderingAllowed(false);
-                table.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-
-                JScrollPane MyScrollPane = new JScrollPane(table);
-                MyScrollPane.setBounds(50, 230, 520, 100);
-                MyScrollPane.setBorder(BorderFactory.createMatteBorder(2, 2, 2, 2, Color.blue));
-                jf.add(MyScrollPane);
+                tableMedias.setModel(model);
+                MyScrollPane.setVisible(true);
             }
         });
 
@@ -150,10 +154,10 @@ public class PageUtilisateur {
         tableReservation.setBounds(50, 400, 300, 150);
         jf.getContentPane().add(tableReservation);
 
-        JButton btnAjouter = new JButton("Réserver");
-        btnAjouter.setFont(new Font("Times New Roman", Font.PLAIN, 16));
-        btnAjouter.setBounds(400, 450, 100, 50);
-        jf.getContentPane().add(btnAjouter);
+        JButton btnReserver = new JButton("Réserver");
+        btnReserver.setFont(new Font("Times New Roman", Font.PLAIN, 16));
+        btnReserver.setBounds(400, 450, 100, 50);
+        jf.getContentPane().add(btnReserver);
 
         JTextField txtIdMedia = new JTextField();
         txtIdMedia.setBounds(500, 500, 100, 30);
@@ -171,18 +175,29 @@ public class PageUtilisateur {
         Date dateFin = currentDate.getTime();
         String dateFinReservation = formatter.format(dateFin);
 
-        btnAjouter.addActionListener(e -> {
-            JTextField txtDateDeb = new JTextField();
-            txtDateDeb.setBounds(600, 500, 100, 30);
-            txtDateDeb.setText(dateDebReservation);
-            txtDateDeb.setEnabled(false);
-            jf.getContentPane().add(txtDateDeb);
+        tableMedias.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+            public void valueChanged(ListSelectionEvent event) {
+                System.out.println("row " + tableMedias.getSelectedRow() + " column " + tableMedias.getSelectedColumn());
+                if (tableMedias.getSelectedRow() > 0) {
+                    JTextField txtDateDeb = new JTextField();
+                    txtDateDeb.setBounds(600, 500, 100, 30);
+                    txtDateDeb.setText(dateDebReservation);
+                    txtDateDeb.setEnabled(false);
+                    jf.getContentPane().add(txtDateDeb);
 
-            JTextField txtDateFin = new JTextField();
-            txtDateFin.setBounds(700, 500, 100, 30);
-            txtDateFin.setText(dateFinReservation);
-            txtDateFin.setEnabled(false);
-            jf.getContentPane().add(txtDateFin);
+                    JTextField txtDateFin = new JTextField();
+                    txtDateFin.setBounds(700, 500, 100, 30);
+                    txtDateFin.setText(dateFinReservation);
+                    txtDateFin.setEnabled(false);
+                    jf.getContentPane().add(txtDateFin);
+
+                }
+            }
+        });
+
+
+        btnReserver.addActionListener(e -> {
+            System.out.println("save");
         });
 
         jf.setVisible(true);
