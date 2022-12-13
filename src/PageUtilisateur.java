@@ -115,7 +115,6 @@ public class PageUtilisateur {
 
                 model = new DefaultTableModel(mediasByCateg, enteteTabMedia);
                 model.fireTableDataChanged();
-                System.out.println(model.getRowCount());
                 tableMedias.setModel(model);
                 MyScrollPane.setVisible(true);
             }
@@ -190,7 +189,6 @@ public class PageUtilisateur {
                     txtDateFin.setText(dateFinReservation);
                     txtDateFin.setEnabled(false);
                     jf.getContentPane().add(txtDateFin);
-
                 }
             }
         });
