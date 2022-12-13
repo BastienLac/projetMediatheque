@@ -12,10 +12,6 @@ public class Livre extends Media {
         this.nombrePage = nombrePage;
     }
 
-    public Livre(int nombrePage, String titre, String createur, int anneeDeParution, int categorie) {
-        super(titre, createur, anneeDeParution, categorie);
-        this.nombrePage=nombrePage;
-    }
     public static void ajouterLivre()  {
         String nbPagesText = PageAdmin.nbPages.getText();
         try {
@@ -39,7 +35,7 @@ public class Livre extends Media {
             ResultSet livres = st.executeQuery();
 
             while(livres.next()) {
-                Media livre = new CD(livres.getString(2), livres.getString(3), livres.getInt(4), livres.getInt(7));
+                Media livre = new Livre(livres.getString(2), livres.getString(3), livres.getInt(4), livres.getInt(7));
                 mediasParCateg.add(livre);
             }
         }

@@ -29,7 +29,6 @@ public class PageAdmin {
         //fixation des dimensions de la fenetre
         Dimension tailleMoniteur = Toolkit.getDefaultToolkit().getScreenSize();
         adminpage.setSize(tailleMoniteur.width, tailleMoniteur.height);
-        adminpage.setLocation(70, 50);
 
         // label bienvenue
         JLabel bienvenue = new JLabel("Bienvenue a la page administrateur ");

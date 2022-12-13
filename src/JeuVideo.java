@@ -11,11 +11,6 @@ public class JeuVideo extends Media {
         this.console = console;
     }
 
-    public JeuVideo(String titre, String console, String createur, int anneeDeParution, int categorie) {
-        super(titre, createur, anneeDeParution, categorie);
-        this.console = console;
-    }
-
     protected static ArrayList<Media> getMediaParCategorie(int idCateg) throws SQLException {
         Connection conn = MySQLConnection.getConnexion();
         ArrayList<Media> mediasParCateg = new ArrayList<>();
