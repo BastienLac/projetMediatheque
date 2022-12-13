@@ -131,6 +131,7 @@ public class PageUtilisateur {
         } catch (SQLException ex) {
             throw new RuntimeException(ex);
         }
+
         String[] entete = {"Date début", "Date de fin"};
         Object[][] reservationsUtilisateur = new Object[reservations.size()][entete.length];
         for (int i = 0; i < reservations.size(); i++) {
@@ -192,7 +193,6 @@ public class PageUtilisateur {
                 }
             }
         });
-
 
         btnReserver.addActionListener(e -> {
             System.out.println("save");

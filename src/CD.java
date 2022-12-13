@@ -6,8 +6,8 @@ import java.util.ArrayList;
 
 public class CD extends Media {
     protected int nombreChanson;
-    protected CD(String titre, String createur, int anneeDeParution, int categorie, int nombreChanson) {
-        super(titre, createur, anneeDeParution, categorie);
+    protected CD(int id, String titre, String createur, int anneeDeParution, int categorie, int nombreChanson) {
+        super(id, titre, createur, anneeDeParution, categorie);
         this.nombreChanson = nombreChanson;
     }
 
@@ -18,7 +18,7 @@ public class CD extends Media {
             PreparedStatement st = conn.prepareStatement("SELECT m.id, m.titre, m.createur, m.anneeDeParution, m.idCategorieMedia, c.id, c.nombreChanson FROM media m inner join cd c on m.id = c.id WHERE m.id IN (SELECT id from cd);");
             ResultSet cds = st.executeQuery();
             while(cds.next()) {
-                Media cd = new CD(cds.getString(2), cds.getString(3), cds.getInt(4), cds.getInt(5), cds.getInt(7));
+                Media cd = new CD(cds.getInt(1), cds.getString(2), cds.getString(3), cds.getInt(4), cds.getInt(5), cds.getInt(7));
                 allmedia.add(cd);
             }
         }
@@ -39,7 +39,7 @@ public class CD extends Media {
             ResultSet cds = st.executeQuery();
 
             while(cds.next()) {
-                Media cd = new CD(cds.getString(2), cds.getString(3), cds.getInt(4), cds.getInt(5), cds.getInt(7));
+                Media cd = new CD(cds.getInt(1), cds.getString(2), cds.getString(3), cds.getInt(4), cds.getInt(5), cds.getInt(7));
                 mediasParCateg.add(cd);
             }
         }

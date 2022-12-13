@@ -7,8 +7,8 @@ import java.util.ArrayList;
 public class Livre extends Media {
     protected int nombrePage;
 
-    protected Livre(String titre, String createur, int anneeDeParution, int categorie, int nombrePage) {
-        super(titre, createur, anneeDeParution, categorie);
+    protected Livre(int id, String titre, String createur, int anneeDeParution, int categorie, int nombrePage) {
+        super(id, titre, createur, anneeDeParution, categorie);
         this.nombrePage = nombrePage;
     }
 
@@ -19,7 +19,7 @@ public class Livre extends Media {
             PreparedStatement st = conn.prepareStatement("SELECT m.id, m.titre, m.createur, m.anneeDeParution, m.idCategorieMedia, l.id, l.nombrePage FROM media m inner join livre l on m.id = l.id WHERE m.id IN (SELECT id from livre);");
             ResultSet livres = st.executeQuery();
             while(livres.next()) {
-                Media livre = new DVD(livres.getString(2), livres.getString(3), livres.getInt(4), livres.getInt(5), livres.getInt(7));
+                Media livre = new DVD(livres.getInt(1), livres.getString(2), livres.getString(3), livres.getInt(4), livres.getInt(5), livres.getInt(7));
                 allmedia.add(livre);
             }
         }
@@ -53,7 +53,7 @@ public class Livre extends Media {
             ResultSet livres = st.executeQuery();
 
             while(livres.next()) {
-                Media livre = new Livre(livres.getString(2), livres.getString(3), livres.getInt(4), livres.getInt(5), livres.getInt(7));
+                Media livre = new Livre(livres.getInt(1), livres.getString(2), livres.getString(3), livres.getInt(4), livres.getInt(5), livres.getInt(7));
                 mediasParCateg.add(livre);
             }
         }

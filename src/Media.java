@@ -5,20 +5,14 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
 public abstract class Media {
+    protected int id;
     protected String titre;
     protected String createur;
     protected int anneeDeParution;
-    protected CategorieMedia categorie;
     protected int categorieId;
-    static ArrayList<String> typesSelected = new ArrayList<String>();
 
-    protected Media(String titre, String createur, int anneeDeParution) {
-        this.titre = titre;
-        this.createur = createur;
-        this.anneeDeParution = anneeDeParution;
-    }
-
-    public Media(String titre, String createur, int anneeDeParution, int categorie) {
+    protected Media(int id, String titre, String createur, int anneeDeParution, int categorie) {
+        this.id = id;
         this.titre = titre;
         this.createur = createur;
         this.anneeDeParution = anneeDeParution;
@@ -75,7 +69,7 @@ public abstract class Media {
           System.out.println(e);
         }
     }
-    public static  void ajouterMedia() {
+    public static void ajouterMedia() {
         String mediaTitre = PageAdmin.titre.getText();
         String mediaCreateur = PageAdmin.createur.getText();
         String mediaDate = PageAdmin.anneeDeParution.getText();
@@ -117,25 +111,7 @@ public abstract class Media {
         }
         return arrayList.get(PageAdmin.model.getRowCount()-1);
     }
-    public static int getIdMedia(Media media) {
-        int id = 0;
-        try {
-            Connection conn = MySQLConnection.getConnexion();
-            assert conn != null;
-            PreparedStatement st = conn.prepareStatement("SELECT id from media where titre = ? and createur = ?;");
-            st.setString(1, media.getTitre());
-            st.setString(2, media.getCreateur());
-            ResultSet resultMedia = st.executeQuery();
-            while (resultMedia.next()) {
-                id = resultMedia.getInt(1);
-            }
-            conn.close();
-        }
-        catch (Exception exception) {
-            System.out.println(exception);
-        }
-        return id;
-    }
+
     public static  String recupererType(int id) {
         int idType = 0;
         try {
@@ -219,6 +195,11 @@ public abstract class Media {
         }
         return "Pas de type";
     }
+
+    public int getId() {
+        return id;
+    }
+
     public String getTitre() {
         return titre;
     }

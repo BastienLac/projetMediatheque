@@ -7,8 +7,8 @@ import java.util.ArrayList;
 public class DVD extends Media {
     protected int duree;
 
-    protected DVD(String titre, String createur, int anneeDeParution, int categorie, int duree) {
-        super(titre, createur, anneeDeParution, categorie);
+    protected DVD(int id, String titre, String createur, int anneeDeParution, int categorie, int duree) {
+        super(id, titre, createur, anneeDeParution, categorie);
         this.duree = duree;
     }
 
@@ -19,7 +19,7 @@ public class DVD extends Media {
             PreparedStatement st = conn.prepareStatement("SELECT m.id, m.titre, m.createur, m.anneeDeParution, m.idCategorieMedia, d.id, d.duree FROM media m inner join dvd d on m.id = d.id WHERE m.id IN (SELECT id from dvd);");
             ResultSet dvds = st.executeQuery();
             while(dvds.next()) {
-                Media dvd = new DVD(dvds.getString(2), dvds.getString(3), dvds.getInt(4), dvds.getInt(5), dvds.getInt(7));
+                Media dvd = new DVD(dvds.getInt(1), dvds.getString(2), dvds.getString(3), dvds.getInt(4), dvds.getInt(5), dvds.getInt(7));
                 allmedia.add(dvd);
             }
         }
@@ -40,7 +40,7 @@ public class DVD extends Media {
             ResultSet dvds = st.executeQuery();
 
             while (dvds.next()) {
-                Media dvd = new DVD(dvds.getString(2), dvds.getString(3), dvds.getInt(4), dvds.getInt(5), dvds.getInt(7));
+                Media dvd = new DVD(dvds.getInt(1), dvds.getString(2), dvds.getString(3), dvds.getInt(4), dvds.getInt(5), dvds.getInt(7));
                 mediasParCateg.add(dvd);
             }
         } catch (Exception e) {

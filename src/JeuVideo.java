@@ -6,8 +6,8 @@ import java.util.ArrayList;
 
 public class JeuVideo extends Media {
     protected String console;
-    protected JeuVideo(String titre, String createur, int anneeDeParution, int categorie, String console) {
-        super(titre, createur, anneeDeParution, categorie);
+    protected JeuVideo(int id, String titre, String createur, int anneeDeParution, int categorie, String console) {
+        super(id, titre, createur, anneeDeParution, categorie);
         this.console = console;
     }
 
@@ -18,7 +18,7 @@ public class JeuVideo extends Media {
             PreparedStatement st = conn.prepareStatement("SELECT m.id, m.titre, m.createur, m.anneeDeParution, m.idCategorieMedia, j.id, j.console FROM media m inner join jeuvideo j on m.id = j.id WHERE m.id IN (SELECT id from jeuvideo);");
             ResultSet jvs = st.executeQuery();
             while(jvs.next()) {
-                Media jv = new JeuVideo(jvs.getString(2), jvs.getString(3), jvs.getInt(4), jvs.getInt(5), jvs.getString(7));
+                Media jv = new JeuVideo(jvs.getInt(1), jvs.getString(2), jvs.getString(3), jvs.getInt(4), jvs.getInt(5), jvs.getString(7));
                 allmedia.add(jv);
             }
         }
@@ -39,7 +39,7 @@ public class JeuVideo extends Media {
             ResultSet jvs = st.executeQuery();
 
             while (jvs.next()) {
-                Media jv = new JeuVideo(jvs.getString(2), jvs.getString(3), jvs.getInt(4), jvs.getInt(5), jvs.getString(7));
+                Media jv = new JeuVideo(jvs.getInt(1), jvs.getString(2), jvs.getString(3), jvs.getInt(4), jvs.getInt(5), jvs.getString(7));
                 mediasParCateg.add(jv);
             }
         } catch (Exception e) {
