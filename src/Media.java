@@ -1,8 +1,8 @@
-import java.sql.SQLException;
-import java.util.ArrayList;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
 
 public abstract class Media {
     protected int id;
@@ -57,6 +57,7 @@ public abstract class Media {
         }
         return allMedias;
     }
+
     public static void supprimerMedia() {
         try {
           Connection conn = MySQLConnection.getConnexion();
@@ -69,6 +70,7 @@ public abstract class Media {
           System.out.println(e);
         }
     }
+
     public static void ajouterMedia() {
         String mediaTitre = PageAdmin.titre.getText();
         String mediaCreateur = PageAdmin.createur.getText();
@@ -112,7 +114,7 @@ public abstract class Media {
         return arrayList.get(PageAdmin.model.getRowCount()-1);
     }
 
-    public static  String recupererType(int id) {
+    public static String recupererType(int id) {
         int idType = 0;
         try {
             Connection conn = MySQLConnection.getConnexion();
@@ -194,6 +196,15 @@ public abstract class Media {
             System.out.println(exception);
         }
         return "Pas de type";
+    }
+
+    public static Media findMedia(String titre, String createur, int anneDeParution) throws SQLException {
+        for (int i = 0; i < Media.getAll().size(); i++) {
+            if (titre.equals(Media.getAll().get(i).getTitre()) && createur.equals(Media.getAll().get(i).getCreateur()) && anneDeParution == Media.getAll().get(i).getAnneeDeParution()) {
+                return Media.getAll().get(i);
+            }
+        }
+        return null;
     }
 
     public int getId() {

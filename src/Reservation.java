@@ -43,14 +43,14 @@ public class Reservation {
         return mesReservations;
     }
 
-    public static void ajouterReservation(int idMedia, int idUtilisateur, Date dateDeb, Date dateFin)  {
+    public static void ajouterReservation(int idMedia, int idUtilisateur, String dateDeb, String dateFin)  {
         try {
             Connection conn = MySQLConnection.getConnexion();
-            PreparedStatement st = conn.prepareStatement("INSERT INTO reservation ('idMedia','idUtilisateur', 'dateDeb', 'dateFin') VALUES (?,?, ?, ?)");
+            PreparedStatement st = conn.prepareStatement("INSERT INTO reservation (idMedia, idUtilisateur, dateDeb, dateFin) VALUES (?, ?, ?, ?);");
             st.setInt(1, idMedia);
             st.setInt(2, idUtilisateur);
-            st.setDate(3, dateDeb);
-            st.setDate(4, dateFin);
+            st.setString(3, dateDeb);
+            st.setString(4, dateFin);
             st.executeUpdate();
         } catch (Exception exception) {
             System.out.println(exception);

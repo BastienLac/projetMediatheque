@@ -16,6 +16,9 @@ public class PageUtilisateur {
     static Object[][] data;
     static String[] columnNames;
     static DefaultTableModel model = new DefaultTableModel(data, columnNames);
+    static Media mediaSelected = null;
+    static JTextField txtDateDeb = new JTextField();
+    static JTextField txtDateFin = new JTextField();
 
     public static void main(int[] idUtilisateur) throws SQLException {
         //creation du Jframe
@@ -164,7 +167,7 @@ public class PageUtilisateur {
         jf.getContentPane().add(txtIdMedia);
 
         // Format d'affichage de la date
-        SimpleDateFormat formatter= new SimpleDateFormat("dd-MM-yyyy");
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 
         Date dateDeb = new Date(System.currentTimeMillis());
         String dateDebReservation = formatter.format(dateDeb);
@@ -177,15 +180,18 @@ public class PageUtilisateur {
 
         tableMedias.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
             public void valueChanged(ListSelectionEvent event) {
-                System.out.println("row " + tableMedias.getSelectedRow() + " column " + tableMedias.getSelectedColumn());
+                try {
+                    mediaSelected = Media.findMedia((String) tableMedias.getValueAt(tableMedias.getSelectedRow(), 0), (String) tableMedias.getValueAt(tableMedias.getSelectedRow(), 1), (int) tableMedias.getValueAt(tableMedias.getSelectedRow(), 2));
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+
                 if (tableMedias.getSelectedRow() > 0) {
-                    JTextField txtDateDeb = new JTextField();
                     txtDateDeb.setBounds(600, 500, 100, 30);
                     txtDateDeb.setText(dateDebReservation);
                     txtDateDeb.setEnabled(false);
                     jf.getContentPane().add(txtDateDeb);
 
-                    JTextField txtDateFin = new JTextField();
                     txtDateFin.setBounds(700, 500, 100, 30);
                     txtDateFin.setText(dateFinReservation);
                     txtDateFin.setEnabled(false);
@@ -195,7 +201,7 @@ public class PageUtilisateur {
         });
 
         btnReserver.addActionListener(e -> {
-            System.out.println("save");
+            Reservation.ajouterReservation(mediaSelected.getId(), idUtilisateur[0], dateDebReservation, dateFinReservation);
         });
 
         jf.setVisible(true);
