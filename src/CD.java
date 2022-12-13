@@ -7,8 +7,8 @@ public class CD extends Media {
         super(titre, createur, anneeDeParution, categorie);
         this.nombreChanson = nombreChanson;
     }
-    public static void ajouterCD()  {
-        String nbChansonText= PageAdmin.nbChanson.getText();
+    public static void ajouterCD() {
+        String nbChansonText = PageAdmin.nbChanson.getText();
         try {
             Connection conn = MySQLConnection.getConnexion();
             PreparedStatement st = conn.prepareStatement("INSERT INTO cd (`id`,`nombreChanson`) VALUES (?,?)");

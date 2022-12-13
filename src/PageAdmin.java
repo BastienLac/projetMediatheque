@@ -60,7 +60,7 @@ public class PageAdmin {
         }
 
         // table
-        columnNames = new String[]{"Titre", "Createur", "Annee de parution", "IdCategorieMedia"};
+        columnNames = new String[]{"Titre", "Createur", "Annee de parution", "IdCategorieMedia","Type"};
         data = new Object[allmedias.toArray().length][columnNames.length];
         for (int i = 0; i < allmedias.toArray().length; i++) {
             for (int j = 0; j < columnNames.length; j++) {
@@ -69,6 +69,7 @@ public class PageAdmin {
                     case 1 : data[i][j] = allmedias.get(i).getCreateur(); break;
                     case 2 : data[i][j] = allmedias.get(i).getAnneeDeParution(); break;
                     case 3 : data[i][j] = allmedias.get(i).getCategorie();break;
+                    case 4 : data[i][j] = Media.recupererType(Media.getIdMedia(allmedias.get(i)));
                 }
             }
         }
@@ -91,7 +92,6 @@ public class PageAdmin {
         deleteButton.setBounds(70, 360, 100, 30);
         adminpage.add(deleteButton);
         deleteButton.addActionListener(ae -> {
-            // check for selected row first
             Media.supprimerMedia();
             model.removeRow(table.getSelectedRow());
             JOptionPane.showMessageDialog(null, "Vous avez bien supprime le media");

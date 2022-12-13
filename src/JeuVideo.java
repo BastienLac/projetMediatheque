@@ -3,11 +3,9 @@ import java.sql.PreparedStatement;
 
 public class JeuVideo extends Media {
     protected String console;
-
     public JeuVideo(String titre, String console, String createur, int anneeDeParution, int categorie) {
         super(titre, createur, anneeDeParution, categorie);
         this.console=console;
-
     }
     public static void ajouterJV()  {
         String consoleText = PageAdmin.console.getText();
