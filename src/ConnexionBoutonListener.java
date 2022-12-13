@@ -1,8 +1,10 @@
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import javax.swing.*;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 public class ConnexionBoutonListener implements ActionListener {
     static JButton connexionButton = new JButton("Se connecter");
     static JTextField txtLogin = new JTextField(16);
@@ -44,7 +46,7 @@ public class ConnexionBoutonListener implements ActionListener {
                 st.setString(2, mdp);
                 ResultSet rs = st.executeQuery();
                 if(rs.next()){
-                    PageUtilisateur.main();
+                    PageUtilisateur.main(new int[] {rs.getInt(1)});
                 }
             } catch (Exception ex) {
                 System.out.println(e);
