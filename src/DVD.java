@@ -1,7 +1,6 @@
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
-
 public class DVD extends Media {
     protected int duree;
 
@@ -14,7 +13,7 @@ public class DVD extends Media {
         try {
             Connection conn = MySQLConnection.getConnexion();
             PreparedStatement st = conn.prepareStatement("INSERT INTO dvd (`id`,`duree`) VALUES (?,?)");
-            st.setString(1, recupererID());
+            st.setString(1, Media.recupererID());
             st.setString(2, dureeText);
             st.executeUpdate();
 
@@ -22,5 +21,4 @@ public class DVD extends Media {
             System.out.println(exception);
         }
     }
-
 }

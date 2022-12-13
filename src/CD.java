@@ -1,5 +1,6 @@
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+
 public class CD extends Media {
     protected int nombreChanson;
 
@@ -7,12 +8,13 @@ public class CD extends Media {
         super(titre, createur, anneeDeParution, categorie);
         this.nombreChanson = nombreChanson;
     }
-    public static void ajouterCD()  {
-        String nbChansonText= PageAdmin.nbChanson.getText();
+
+    public static void ajouterCD() {
+        String nbChansonText = PageAdmin.nbChanson.getText();
         try {
             Connection conn = MySQLConnection.getConnexion();
             PreparedStatement st = conn.prepareStatement("INSERT INTO cd (`id`,`nombreChanson`) VALUES (?,?)");
-            st.setString(1,recupererID());
+            st.setString(1, recupererID());
             st.setString(2, nbChansonText);
             st.executeUpdate();
             conn.close();

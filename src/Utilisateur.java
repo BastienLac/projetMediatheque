@@ -75,8 +75,7 @@ public class Utilisateur {
         String mdp = InscriptionPage.txtMdp.getText();
         Connection conn = MySQLConnection.getConnexion();
         try {
-            PreparedStatement st = conn.prepareStatement(
-                    "INSERT INTO utilisateur (prenom, nom, login, mdp, estAdmin) VALUES (?,?,?,?,0)");
+            PreparedStatement st = conn.prepareStatement("INSERT INTO utilisateur (prenom, nom, login, mdp, estAdmin) VALUES (?,?,?,?,0)");
             st.setString(1, prenom);
             st.setString(2, nom);
             st.setString(3, login);

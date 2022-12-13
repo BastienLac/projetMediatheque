@@ -2,8 +2,6 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.*;
-import java.sql.*;
-
 public class InscriptionPage implements ActionListener {
     static JButton inscriptionButton = new JButton("Valider");
     static JTextField txtNom = new JTextField(16);

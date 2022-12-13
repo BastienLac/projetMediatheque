@@ -71,7 +71,7 @@ public class Media {
           String typeSelected = PageAdmin.type.getSelectedItem().toString();
           ArrayList<String> typesSelected = new ArrayList<String>();
           typesSelected.add(typeSelected);
-          PageAdmin.model.insertRow(PageAdmin.table.getRowCount(), new Object[]{mediaTitre, mediaCreateur, mediaDate, mediaCategorie,typeSelected});
+          PageAdmin.model.insertRow(PageAdmin.table.getRowCount(), new Object[]{mediaTitre, mediaCreateur, mediaDate, mediaCategorie, typeSelected});
 
           try {
               Connection conn = MySQLConnection.getConnexion();
@@ -86,9 +86,9 @@ public class Media {
           } catch (Exception exception) {
               System.out.println(exception);
           }
-
       }
-    public static  String recupererID() {
+
+    public static String recupererID() {
 
         ArrayList<String> arrayList = new ArrayList<String>();
         try {
@@ -105,5 +105,108 @@ public class Media {
             System.out.println(exception);
         }
         return arrayList.get(PageAdmin.model.getRowCount()-1);
+    }
+    public static int getIdMedia(Media media) {
+
+        int id = 0;
+        try {
+            Connection conn = MySQLConnection.getConnexion();
+            assert conn != null;
+            PreparedStatement st = conn.prepareStatement("SELECT id from media where titre = ? and createur = ?;");
+            st.setString(1, media.getTitre());
+            st.setString(2, media.getCreateur());
+            ResultSet resultMedia = st.executeQuery();
+            while (resultMedia.next()) {
+                id = resultMedia.getInt(1);
+            }
+            conn.close();
+        }
+        catch (Exception exception) {
+            System.out.println(exception);
+        }
+        return id;
+    }
+    public static  String recupererType(int id) {
+        int idType = 0;
+        try {
+            Connection conn = MySQLConnection.getConnexion();
+            assert conn != null;
+            PreparedStatement st = conn.prepareStatement("SELECT * from media where id = ?");
+            st.setInt(1, id);
+            ResultSet media = st.executeQuery();
+            while (media.next()) {
+                idType = media.getInt(1);
+            }
+            conn.close();
+        }
+        catch (Exception exception) {
+            System.out.println(exception);
+        }
+        try {
+            Connection conn = MySQLConnection.getConnexion();
+            assert conn != null;
+            PreparedStatement stt = conn.prepareStatement("SELECT * from livre");
+            ResultSet livre = stt.executeQuery();
+            ArrayList<Integer> livres = new ArrayList<>();
+            while (livre.next()) {
+                livres.add(livre.getInt(1));
+            }
+            if (livres.contains(idType)) {
+                return "Livre";
+            }
+            conn.close();
+        } catch (Exception exception) {
+            System.out.println(exception);
+        }
+        try {
+            Connection conn = MySQLConnection.getConnexion();
+            assert conn != null;
+            PreparedStatement a = conn.prepareStatement("SELECT * from dvd");
+            ResultSet dvd = a.executeQuery();
+            ArrayList<Integer> dvds = new ArrayList<>();
+            while (dvd.next()) {
+                dvds.add(dvd.getInt(1));
+            }
+            if (dvds.contains(idType)) {
+                return "DVD";
+            }
+            conn.close();
+        } catch (Exception exception) {
+            System.out.println(exception);
+        }
+        try {
+            Connection conn = MySQLConnection.getConnexion();
+            assert conn != null;
+            PreparedStatement b = conn.prepareStatement("SELECT * from cd");
+            ResultSet cd = b.executeQuery();
+            ArrayList<Integer> cds = new ArrayList<>();
+            while (cd.next()) {
+                cds.add(cd.getInt(1));
+            }
+            if (cds.contains(idType)) {
+                return "CD";
+            }
+            conn.close();
+        } catch (Exception exception) {
+            System.out.println(exception);
+        }
+        try {
+            Connection conn = MySQLConnection.getConnexion();
+            assert conn != null;
+            PreparedStatement JV = conn.prepareStatement("SELECT * from jeuVideo");
+            ResultSet jv = JV.executeQuery();
+            ArrayList<Integer> jvs = new ArrayList<>();
+            while (jv.next()) {
+                jvs.add(jv.getInt(1));
+            }
+            if (jvs.contains(idType)) {
+                return "Jeu Video";
+            }
+            conn.close();
+        }
+        catch (Exception exception) {
+            System.out.println(exception);
+        }
+        return "Pas de type";
     }
 }

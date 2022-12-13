@@ -69,7 +69,7 @@ public class PageAdmin {
                     case 1 : data[i][j] = allmedias.get(i).getCreateur(); break;
                     case 2 : data[i][j] = allmedias.get(i).getAnneeDeParution(); break;
                     case 3 : data[i][j] = allmedias.get(i).getCategorie();break;
-                    case 4 : data[i][j] = "";break;
+                    case 4 : data[i][j] = Media.recupererType(Media.getIdMedia(allmedias.get(i)));
                 }
             }
         }
@@ -147,6 +147,8 @@ public class PageAdmin {
             type = new JComboBox(types);
             adminpage.add(type);
             type.setBounds(600, 360, 100, 30);
+            type.setVisible(true);
+            adminpage.setBackground(Color.blue);
             nbChanson = new JTextField("");
             duree = new JTextField("");
             console= new JTextField("");
@@ -217,7 +219,7 @@ public class PageAdmin {
                 }
             });
 
-            //action lorsqu'on clique
+            //action lorsqu'on clique sur le bouton valider
             validation.addActionListener(e -> {
                 String s = e.getActionCommand();
                 String typeSelectede = type.getSelectedItem().toString();
