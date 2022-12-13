@@ -3,18 +3,24 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
 public class Utilisateur {
+    private int id;
     private String nom;
     private String prenom;
     private String nomUtilisateur;
     private String motDePasse;
     private boolean estAdmin;
 
-    public Utilisateur(String nom, String prenom, String nomUtilisateur, String motDePasse, boolean estAdmin) {
+    public Utilisateur(int id, String nom, String prenom, String nomUtilisateur, String motDePasse, boolean estAdmin) {
+        this.id = id;
         this.nom = nom;
         this.prenom = prenom;
         this.nomUtilisateur = nomUtilisateur;
         this.motDePasse = motDePasse;
         this.estAdmin = estAdmin;
+    }
+
+    public int getId() {
+        return id;
     }
 
     public String getNom() {
@@ -54,7 +60,7 @@ public class Utilisateur {
                 boolean isAdmin = rs.getInt(6) == 1
                         ? true
                         : false;
-                Utilisateur monUtilisateur = new Utilisateur(rs.getString(3), rs.getString(2), rs.getString(4), rs.getString(5), isAdmin);
+                Utilisateur monUtilisateur = new Utilisateur(rs.getInt(1), rs.getString(3), rs.getString(2), rs.getString(4), rs.getString(5), isAdmin);
                 return monUtilisateur;
             }
             return null;

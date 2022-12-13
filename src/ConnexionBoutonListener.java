@@ -1,8 +1,8 @@
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import javax.swing.*;
-import java.sql.*;
+import java.sql.SQLException;
 public class ConnexionBoutonListener implements ActionListener {
     static JButton connexionButton = new JButton("Se connecter");
     static JButton inscriptionButton = new JButton("S'inscrire");
@@ -45,7 +45,6 @@ public class ConnexionBoutonListener implements ActionListener {
         jf.setLocationRelativeTo(null);
         jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
-
     public void actionPerformed(ActionEvent e){
         String s = e.getActionCommand();
         if (s.equals("Se connecter")) {
@@ -62,17 +61,17 @@ public class ConnexionBoutonListener implements ActionListener {
                 }
                 else{
                     try {
-                        PageUtilisateur.main();
+                        PageUtilisateur.main(new int[] {utilisateur1.getId()});
                     } catch (SQLException ex) {
                         throw new RuntimeException(ex);
                     }
                 }
             }
             else
-                JOptionPane.showMessageDialog(null, "Erreur, mdp ou login incorrect. Reessayez");
+                txtLogin.setText("TES PAS CO");
         } else if (s.equals("S'inscrire")) {
-             InscriptionPage.main();
-        }else if (s.equals("Valider")) {
+            InscriptionPage.main();
+        } else if (s.equals("Valider")) {
             Utilisateur.inscrireUtilisateur();
         }
     }

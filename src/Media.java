@@ -4,92 +4,99 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-public class Media {
-    static ArrayList<String> typesSelected = new ArrayList<String>();
+public abstract class Media {
+    protected int id;
     protected String titre;
     protected String createur;
     protected int anneeDeParution;
-    protected int categorie;
+    protected int categorieId;
 
-    public Media(String titre, String createur, int anneeDeParution, int categorie) {
+    protected Media(int id, String titre, String createur, int anneeDeParution, int categorie) {
+        this.id = id;
         this.titre = titre;
         this.createur = createur;
         this.anneeDeParution = anneeDeParution;
-        this.categorie = categorie;
+        this.categorieId = categorie;
     }
-    public String getTitre() {
-        return titre;
-    }
-
-    public String getCreateur() {
-        return createur;
-    }
-
-    public int getAnneeDeParution() {
-        return anneeDeParution;
-    }
-
-    public int getCategorie() {
-        return categorie;
-    }
-
-    public static ArrayList<Media> getAll() throws SQLException {
-        Connection conn = MySQLConnection.getConnexion();
-        ArrayList<Media> allmedia = new ArrayList<>();
-        try {
-            PreparedStatement st = conn.prepareStatement("SELECT * FROM media");
-            ResultSet media = st.executeQuery();
-            while(media.next()) {
-                Media _media = new Media(media.getString(2),media.getString(3),media.getInt(4),media.getInt(5));
-                allmedia.add(_media);
-            }
+    protected static ArrayList<Media> getMediaParCategorie(int idCateg) throws SQLException {
+        ArrayList<Media> allMedias = new ArrayList<>();
+        if (CD.getMediaParCategorie(idCateg).size() > 0){
+            allMedias.addAll(CD.getMediaParCategorie(idCateg));
         }
-        catch(Exception e){
-            System.out.println(e);
+
+        if (DVD.getMediaParCategorie(idCateg).size() > 0){
+            allMedias.addAll(DVD.getMediaParCategorie(idCateg));
         }
-        conn.close();
-        return allmedia;
+
+        if (Livre.getMediaParCategorie(idCateg).size() > 0){
+            allMedias.addAll(Livre.getMediaParCategorie(idCateg));
+        }
+
+        if (JeuVideo.getMediaParCategorie(idCateg).size() > 0){
+            allMedias.addAll(JeuVideo.getMediaParCategorie(idCateg));
+        }
+        return allMedias;
+    };
+
+    protected static ArrayList<Media> getAll() throws SQLException {
+        ArrayList<Media> allMedias = new ArrayList<>();
+        if (CD.getAll().size() > 0){
+            allMedias.addAll(CD.getAll());
+        }
+
+        if (DVD.getAll().size() > 0){
+            allMedias.addAll(DVD.getAll());
+        }
+
+        if (Livre.getAll().size() > 0){
+            allMedias.addAll(Livre.getAll());
+        }
+
+        if (JeuVideo.getAll().size() > 0){
+            allMedias.addAll(JeuVideo.getAll());
+        }
+        return allMedias;
     }
-      public static void supprimerMedia() {
+
+    public static void supprimerMedia() {
         try {
-              Connection conn = MySQLConnection.getConnexion();
-              assert conn != null;
-              PreparedStatement st = conn.prepareStatement("DELETE FROM media WHERE titre= ? AND createur=?");
-              st.setString(1, PageAdmin.table.getValueAt(PageAdmin.table.getSelectedRow(), 0).toString());
-              st.setString(2, PageAdmin.table.getValueAt(PageAdmin.table.getSelectedRow(), 1).toString());
-              st.executeUpdate();
-          } catch (Exception e) {
-              System.out.println(e);
-          }
-      }
-      public static  void ajouterMedia() {
+          Connection conn = MySQLConnection.getConnexion();
+          assert conn != null;
+          PreparedStatement st = conn.prepareStatement("DELETE FROM media WHERE titre= ? AND createur=?");
+          st.setString(1, PageAdmin.table.getValueAt(PageAdmin.table.getSelectedRow(), 0).toString());
+          st.setString(2, PageAdmin.table.getValueAt(PageAdmin.table.getSelectedRow(), 1).toString());
+          st.executeUpdate();
+        } catch (Exception e) {
+          System.out.println(e);
+        }
+    }
 
-          String mediaTitre = PageAdmin.titre.getText();
-          String mediaCreateur = PageAdmin.createur.getText();
-          String mediaDate = PageAdmin.anneeDeParution.getText();
-          String mediaCategorie = PageAdmin.categorie.getText();
-          String typeSelected = PageAdmin.type.getSelectedItem().toString();
-          ArrayList<String> typesSelected = new ArrayList<String>();
-          typesSelected.add(typeSelected);
-          PageAdmin.model.insertRow(PageAdmin.table.getRowCount(), new Object[]{mediaTitre, mediaCreateur, mediaDate, mediaCategorie, typeSelected});
+    public static void ajouterMedia() {
+        String mediaTitre = PageAdmin.titre.getText();
+        String mediaCreateur = PageAdmin.createur.getText();
+        String mediaDate = PageAdmin.anneeDeParution.getText();
+        String mediaCategorie = PageAdmin.categorie.getText();
+        String typeSelected = PageAdmin.type.getSelectedItem().toString();
+        ArrayList<String> typesSelected = new ArrayList<String>();
+        typesSelected.add(typeSelected);
+        PageAdmin.model.insertRow(PageAdmin.table.getRowCount(), new Object[]{mediaTitre, mediaCreateur, mediaDate, mediaCategorie, typeSelected});
 
-          try {
-              Connection conn = MySQLConnection.getConnexion();
-              assert conn != null;
-              PreparedStatement st = conn.prepareStatement("INSERT INTO media (`titre`, `createur`, `anneeDeParution`, `idCategorieMedia`) VALUES (?,?,?,?)");
-              st.setString(1, mediaTitre);
-              st.setString(2, mediaCreateur);
-              st.setString(3, mediaDate);
-              st.setString(4, mediaCategorie);
-              st.executeUpdate();
-              conn.close();
-          } catch (Exception exception) {
-              System.out.println(exception);
-          }
-      }
+        try {
+          Connection conn = MySQLConnection.getConnexion();
+          assert conn != null;
+          PreparedStatement st = conn.prepareStatement("INSERT INTO media (`titre`, `createur`, `anneeDeParution`, `idCategorieMedia`) VALUES (?,?,?,?)");
+          st.setString(1, mediaTitre);
+          st.setString(2, mediaCreateur);
+          st.setString(3, mediaDate);
+          st.setString(4, mediaCategorie);
+          st.executeUpdate();
+          conn.close();
+        } catch (Exception exception) {
+          System.out.println(exception);
+        }
+    }
 
     public static String recupererID() {
-
         ArrayList<String> arrayList = new ArrayList<String>();
         try {
             Connection conn = MySQLConnection.getConnexion();
@@ -106,27 +113,8 @@ public class Media {
         }
         return arrayList.get(PageAdmin.model.getRowCount()-1);
     }
-    public static int getIdMedia(Media media) {
 
-        int id = 0;
-        try {
-            Connection conn = MySQLConnection.getConnexion();
-            assert conn != null;
-            PreparedStatement st = conn.prepareStatement("SELECT id from media where titre = ? and createur = ?;");
-            st.setString(1, media.getTitre());
-            st.setString(2, media.getCreateur());
-            ResultSet resultMedia = st.executeQuery();
-            while (resultMedia.next()) {
-                id = resultMedia.getInt(1);
-            }
-            conn.close();
-        }
-        catch (Exception exception) {
-            System.out.println(exception);
-        }
-        return id;
-    }
-    public static  String recupererType(int id) {
+    public static String recupererType(int id) {
         int idType = 0;
         try {
             Connection conn = MySQLConnection.getConnexion();
@@ -208,5 +196,34 @@ public class Media {
             System.out.println(exception);
         }
         return "Pas de type";
+    }
+
+    public static Media findMedia(String titre, String createur, int anneDeParution) throws SQLException {
+        for (int i = 0; i < Media.getAll().size(); i++) {
+            if (titre.equals(Media.getAll().get(i).getTitre()) && createur.equals(Media.getAll().get(i).getCreateur()) && anneDeParution == Media.getAll().get(i).getAnneeDeParution()) {
+                return Media.getAll().get(i);
+            }
+        }
+        return null;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public String getTitre() {
+        return titre;
+    }
+
+    public String getCreateur() {
+        return createur;
+    }
+
+    public int getAnneeDeParution() {
+        return anneeDeParution;
+    }
+
+    public int getCategorie() {
+        return categorieId;
     }
 }

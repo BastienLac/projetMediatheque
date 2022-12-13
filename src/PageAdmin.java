@@ -1,7 +1,7 @@
-import java.awt.*;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-import java.sql.*;
+import java.awt.*;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class PageAdmin {
@@ -29,7 +29,6 @@ public class PageAdmin {
         //fixation des dimensions de la fenetre
         Dimension tailleMoniteur = Toolkit.getDefaultToolkit().getScreenSize();
         adminpage.setSize(tailleMoniteur.width, tailleMoniteur.height);
-        adminpage.setLocation(70, 50);
 
         // label bienvenue
         JLabel bienvenue = new JLabel("Bienvenue a la page administrateur ");
@@ -69,7 +68,7 @@ public class PageAdmin {
                     case 1 : data[i][j] = allmedias.get(i).getCreateur(); break;
                     case 2 : data[i][j] = allmedias.get(i).getAnneeDeParution(); break;
                     case 3 : data[i][j] = allmedias.get(i).getCategorie();break;
-                    case 4 : data[i][j] = Media.recupererType(Media.getIdMedia(allmedias.get(i)));
+                    case 4 : data[i][j] = Media.recupererType(allmedias.get(i).getId());break;
                 }
             }
         }
