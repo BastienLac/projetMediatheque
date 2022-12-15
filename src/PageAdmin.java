@@ -1,8 +1,9 @@
+import java.awt.*;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-import java.awt.*;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
+import java.util.EventObject;
 
 public class PageAdmin {
     static Object[][] data;
@@ -15,7 +16,7 @@ public class PageAdmin {
     static JTextField categorie = new JTextField();
     static JTextField nbChanson = new JTextField();
     static JTextField duree = new JTextField();
-    static JTextField console= new JTextField();
+    static JTextField console = new JTextField();
     static JTextField nbPages = new JTextField();
     static JLabel nbChansonCD = new JLabel();
     static JLabel consoleJV = new JLabel();
@@ -50,37 +51,46 @@ public class PageAdmin {
 
         //ajout des données de la bdd
         ArrayList<Media> allmedias = Media.getAll();
-
         // comoBox
         ArrayList<CategorieMedia> allCategorie = CategorieMedia.getAllCategorie();
-        String[] categories = new String[allCategorie.toArray().length];
+        int length = allCategorie.toArray().length;
+        Integer[] categories = new Integer[length];
         for (int i = 0; i < categories.length; i++) {
-            categories[i] = allCategorie.get(i).getNom();
+            categories[i] = allCategorie.get(i).getId();
         }
 
         // table
-        columnNames = new String[]{"Titre", "Createur", "Annee de parution", "IdCategorieMedia","Type"};
+        columnNames = new String[]{"Titre", "Createur", "Annee de parution", "IdCategorieMedia", "Type"};
         data = new Object[allmedias.toArray().length][columnNames.length];
         for (int i = 0; i < allmedias.toArray().length; i++) {
             for (int j = 0; j < columnNames.length; j++) {
                 switch (j) {
-                    case 0 : data[i][j] = allmedias.get(i).getTitre(); break;
-                    case 1 : data[i][j] = allmedias.get(i).getCreateur(); break;
-                    case 2 : data[i][j] = allmedias.get(i).getAnneeDeParution(); break;
-                    case 3 : data[i][j] = allmedias.get(i).getCategorie();break;
-                    case 4 : data[i][j] = Media.recupererType(allmedias.get(i).getId());break;
+                    case 0:
+                        data[i][j] = allmedias.get(i).getTitre();
+                        break;
+                    case 1:
+                        data[i][j] = allmedias.get(i).getCreateur();
+                        break;
+                    case 2:
+                        data[i][j] = allmedias.get(i).getAnneeDeParution();
+                        break;
+                    case 3:
+                        data[i][j] = allmedias.get(i).getCategorie();
+                        break;
+                    case 4:
+                        data[i][j] = Media.recupererType(allmedias.get(i).getId());
                 }
             }
         }
         model = new DefaultTableModel(data, columnNames);
         table = new JTable(model) {
             //desactiver l'editeur de ligne
-            public boolean editCellAt(int row, int column, java.util.EventObject e) {
+            public boolean editCellAt(int row, int column, EventObject e) {
                 return false;
             }
         };
         table.getTableHeader().setReorderingAllowed(false);
-        table.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         JScrollPane MyScrollPane = new JScrollPane(table);
         MyScrollPane.setBounds(50, 230, 520, 100);
         adminpage.add(MyScrollPane);
@@ -91,7 +101,6 @@ public class PageAdmin {
         deleteButton.setBounds(70, 360, 100, 30);
         adminpage.add(deleteButton);
         deleteButton.addActionListener(ae -> {
-            // check for selected row first
             Media.supprimerMedia();
             model.removeRow(table.getSelectedRow());
             JOptionPane.showMessageDialog(null, "Vous avez bien supprime le media");
@@ -132,7 +141,7 @@ public class PageAdmin {
             adminpage.getContentPane().add(categoriesAvaible);
             categoriesAvaible.setBounds(500, 480, 200, 30);
             // Ajout Combo Box a la fenetre
-            JComboBox<String> jComboBox = new JComboBox<>(categories);
+            JComboBox<Integer> jComboBox = new JComboBox<Integer>(categories);
             adminpage.getContentPane().add(jComboBox);
             jComboBox.setBounds(660, 480, 40, 40);
 
@@ -142,7 +151,7 @@ public class PageAdmin {
             validation.setBounds(390, 520, 100, 30);
 
             //ComoBox
-            String[] types = new String[]{"CD","DVD","JeuVideo","Livre"};
+            String[] types = new String[]{"Choisissez le type","CD", "DVD", "JeuVideo", "Livre"};
             type = new JComboBox(types);
             adminpage.add(type);
             type.setBounds(600, 360, 100, 30);
@@ -150,7 +159,7 @@ public class PageAdmin {
             adminpage.setBackground(Color.blue);
             nbChanson = new JTextField("");
             duree = new JTextField("");
-            console= new JTextField("");
+            console = new JTextField("");
             nbPages = new JTextField("");
             nbChansonCD = new JLabel("Nombre de chansons : ");
             consoleJV = new JLabel("Console : ");
@@ -160,7 +169,7 @@ public class PageAdmin {
             type.addActionListener(e -> {
                 String typeSelected = type.getSelectedItem().toString();
                 String s = e.getActionCommand();
-                if(typeSelected.equals("CD")) {
+                if (typeSelected.equals("CD")) {
                     nbChansonCD.setVisible(true);
                     nbChanson.setVisible(true);
                     adminpage.add(nbChansonCD);
@@ -173,8 +182,7 @@ public class PageAdmin {
                     dureeDVD.setVisible(false);
                     consoleJV.setVisible(false);
                     nbPagesLivre.setVisible(false);
-                }
-                else if(typeSelected.equals("DVD")) {
+                } else if (typeSelected.equals("DVD")) {
                     dureeDVD.setVisible(true);
                     duree.setVisible(true);
                     adminpage.add(duree);
@@ -187,8 +195,7 @@ public class PageAdmin {
                     nbChansonCD.setVisible(false);
                     consoleJV.setVisible(false);
                     nbPagesLivre.setVisible(false);
-                }
-                else if(typeSelected.equals("JeuVideo")) {
+                } else if (typeSelected.equals("JeuVideo")) {
                     console.setVisible(true);
                     consoleJV.setVisible(true);
                     adminpage.add(consoleJV);
@@ -201,8 +208,7 @@ public class PageAdmin {
                     nbChanson.setVisible(false);
                     nbPages.setVisible(false);
                     duree.setVisible(false);
-                }
-                else if(typeSelected.equals("Livre")) {
+                } else if (typeSelected.equals("Livre")) {
                     nbPages.setVisible(true);
                     nbPagesLivre.setVisible(true);
                     adminpage.add(nbPagesLivre);
@@ -217,25 +223,47 @@ public class PageAdmin {
                     duree.setVisible(false);
                 }
             });
-
             //action lorsqu'on clique sur le bouton valider
             validation.addActionListener(e -> {
                 String s = e.getActionCommand();
                 String typeSelectede = type.getSelectedItem().toString();
                 if (s.equals("Valider")) {
-                    Media.ajouterMedia();
-                    if(typeSelectede.equals("CD")) {
-                        CD.ajouterCD();
+                    if (typeSelectede.equals("Choisissez le type"))
+                        JOptionPane.showMessageDialog(null, "Veuillez selectionner un type");
+                    else if (typeSelectede.equals("CD")) {
+                        if (titre.getText().equals("") || createur.getText().equals("") || anneeDeParution.getText().equals("") || categorie.getText().equals("") || nbChanson.getText().equals("")) {
+                            JOptionPane.showMessageDialog(null, "Veuillez remplir tous les champs et entrer l'id d'une categorie existante");
+                        } else {
+                            Media.ajouterMedia();
+                            CD.ajouterCD();
+                            JOptionPane.showMessageDialog(null, "Votre " + typeSelectede + " a ete bien ajoute");
+                        }
+                    } else if (typeSelectede.equals("DVD")) {
+                        if (titre.getText().equals("") || createur.getText().equals("") || anneeDeParution.getText().equals("") || categorie.getText().equals("") || duree.getText().equals("")) {
+                            JOptionPane.showMessageDialog(null, "Veuillez remplir tous les champs et entrer l'id d'une categorie existante");
+                        } else {
+                            Media.ajouterMedia();
+                            DVD.ajouterDVD();
+                            JOptionPane.showMessageDialog(null, "Votre " + typeSelectede + " a ete bien ajoute");
+                        }
+                    } else if (typeSelectede.equals("JeuVideo")) {
+                        if (titre.getText().equals("") || createur.getText().equals("") || anneeDeParution.getText().equals("") || categorie.getText().equals("") || console.getText().equals("")) {
+                            JOptionPane.showMessageDialog(null, "Veuillez remplir tous les champs et entrer l'id d'une categorie existante");
+                        } else {
+                            Media.ajouterMedia();
+                            JeuVideo.ajouterJV();
+                            JOptionPane.showMessageDialog(null, "Veuillez remplir tous les champs et entrer l'id d'une categorie existante");
+                        }
+                    } else if (typeSelectede.equals("Livre")) {
+                        if (titre.getText().equals("") || createur.getText().equals("") || anneeDeParution.getText().equals("") || categorie.getText().equals("") || nbPages.getText().equals("")) {
+                            JOptionPane.showMessageDialog(null, "Veuillez remplir tous les champs et entrer l'id d'une categorie existante");
+                        } else {
+                            Media.ajouterMedia();
+                            Livre.ajouterLivre();
+                            JOptionPane.showMessageDialog(null, "Votre " + typeSelectede + " a ete bien ajoute");
+                        }
                     }
-                    else if(typeSelectede.equals("DVD")) {
-                        DVD.ajouterDVD();
-                    }
-                    else if(typeSelectede.equals("JeuVideo")) {
-                        JeuVideo.ajouterJV();
-                    }
-                    else if(typeSelectede.equals("Livre")) {
-                        Livre.ajouterLivre();
-                    }
+
                 }
             });
 
