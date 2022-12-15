@@ -51,7 +51,7 @@ public class PageAdmin {
 
         //ajout des données de la bdd
         ArrayList<Media> allmedias = Media.getAll();
-
+        System.out.println(allmedias);
         // comoBox
         ArrayList<CategorieMedia> allCategorie = CategorieMedia.getAllCategorieID();
         String[] categories = new String[allCategorie.toArray().length];
@@ -259,8 +259,8 @@ public class PageAdmin {
                         if (titre.getText().equals("") || createur.getText().equals("") || anneeDeParution.getText().equals("") || categorie.getText().equals("") || nbPages.getText().equals("")) {
                             JOptionPane.showMessageDialog(null, "Veuillez remplir tous les champs");
                         } else {
-                            Livre.ajouterLivre();
                             Media.ajouterMedia();
+                            Livre.ajouterLivre();
                             JOptionPane.showMessageDialog(null, "Votre " + typeSelectede + " a ete bien ajoute");
                         }
                     }

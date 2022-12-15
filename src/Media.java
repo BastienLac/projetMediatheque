@@ -1,16 +1,18 @@
 import java.sql.*;
 import java.util.ArrayList;
 public class Media {
+    protected int id;
     protected String titre;
     protected String createur;
     protected int anneeDeParution;
-    protected int categorie;
+    protected int categorieId;
 
-    public Media(String titre, String createur, int anneeDeParution, int categorie) {
+    protected Media(int id, String titre, String createur, int anneeDeParution, int categorie) {
+        this.id = id;
         this.titre = titre;
         this.createur = createur;
         this.anneeDeParution = anneeDeParution;
-        this.categorie = categorie;
+        this.categorieId = categorie;
     }
     public String getTitre() {
         return titre;
@@ -25,27 +27,25 @@ public class Media {
     }
 
     public int getCategorie() {
-        return categorie;
+        return categorieId;
+    }
+    protected static ArrayList<Media> getAll() throws SQLException {
+        ArrayList<Media> allMedias = new ArrayList<>();
+        if (CD.getAll().size() > 0){
+            allMedias.addAll(CD.getAll());
+        }
+        if (DVD.getAll().size() > 0){
+            allMedias.addAll(DVD.getAll());
+        }
+        if (Livre.getAll().size() > 0){
+            allMedias.addAll(Livre.getAll());
+        }
+        if (JeuVideo.getAll().size() > 0){
+            allMedias.addAll(JeuVideo.getAll());
+        }
+        return allMedias;
     }
 
-    public static ArrayList<Media> getAll() throws SQLException {
-        Connection conn = MySQLConnection.getConnexion();
-        ArrayList<Media> allmedia = new ArrayList<>();
-        try {
-            assert conn != null;
-            PreparedStatement st = conn.prepareStatement("SELECT * FROM media");
-            ResultSet media = st.executeQuery();
-            while(media.next()) {
-                Media _media = new Media(media.getString(2),media.getString(3),media.getInt(4),media.getInt(5));
-                allmedia.add(_media);
-            }
-        }
-        catch(Exception e){
-            System.out.println(e);
-        }
-        conn.close();
-        return allmedia;
-    }
     public static void supprimerMedia() {
         try {
               Connection conn = MySQLConnection.getConnexion();
@@ -96,6 +96,7 @@ public class Media {
             while (media.next()) {
                 arrayList.add(media.getString(1));
             }
+            System.out.println(arrayList);
             conn.close();
         }
         catch (Exception exception) {
@@ -104,7 +105,6 @@ public class Media {
         return arrayList.get(PageAdmin.model.getRowCount()-1);
     }
     public static int getIdMedia(Media media) {
-
         int id = 0;
         try {
             Connection conn = MySQLConnection.getConnexion();
