@@ -24,7 +24,7 @@ public class PageUtilisateur {
         jf.getContentPane().add(jLabelCategorie);
 
         // Liste des categories media
-        ArrayList<CategorieMedia> allCategorie = CategorieMedia.getAllCategorieID();
+        ArrayList<CategorieMedia> allCategorie = CategorieMedia.getAllCategorie();
         String[] categories = new String[(allCategorie.toArray().length)];
         for (int i = 0; i < categories.length; i++) {
             categories[i] = allCategorie.get(i).getNom();

@@ -5,17 +5,21 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class CategorieMedia {
+    private int id;
     private String nom;
 
-    public CategorieMedia(String nom) {
+    public CategorieMedia(int id, String nom) {
+        this.id = id;
         this.nom = nom;
     }
+
+    public int getId() { return id; }
 
     public String getNom() {
         return nom;
     }
 
-    public static ArrayList<CategorieMedia> getAllCategorieID() throws SQLException {
+    public static ArrayList<CategorieMedia> getAllCategorie() throws SQLException {
         Connection conn = MySQLConnection.getConnexion();
         ArrayList<CategorieMedia> allCategorie = new ArrayList<>();
 
@@ -23,16 +27,35 @@ public class CategorieMedia {
             PreparedStatement st = conn.prepareStatement("SELECT * FROM categoriemedia");
             ResultSet categorieMedia = st.executeQuery();
 
-            while(categorieMedia.next()) {
-                CategorieMedia categ = new CategorieMedia(categorieMedia.getString(1));
+            while (categorieMedia.next()) {
+                CategorieMedia categ = new CategorieMedia(categorieMedia.getInt(1), categorieMedia.getString(2));
                 allCategorie.add(categ);
             }
-        }
-        catch(Exception e){
+        } catch (Exception e) {
             System.out.println(e);
         }
         conn.close();
 
         return allCategorie;
     }
+
+    public static CategorieMedia getCategorieParNom(String nomCateg) throws SQLException {
+        Connection conn = MySQLConnection.getConnexion();
+        CategorieMedia maCategorie = null;
+        try {
+            PreparedStatement st = conn.prepareStatement("SELECT id, nom FROM categoriemedia where nom = ?");
+            st.setString(1, nomCateg);
+            ResultSet categorieMedia = st.executeQuery();
+
+            while (categorieMedia.next()) {
+                maCategorie = new CategorieMedia(categorieMedia.getInt(1), categorieMedia.getString(2));
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        conn.close();
+
+        return maCategorie;
+    }
+
 }
