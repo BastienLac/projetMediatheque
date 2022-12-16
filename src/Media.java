@@ -206,6 +206,15 @@ public abstract class Media {
         return null;
     }
 
+    public static Media findMediaById(int id) throws SQLException {
+        for (int i = 0; i < Media.getAll().size(); i++) {
+            if (id == Media.getAll().get(i).getId()) {
+                return Media.getAll().get(i);
+            }
+        }
+        return null;
+    }
+
     public int getId() {
         return id;
     }

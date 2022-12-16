@@ -1,6 +1,7 @@
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 
 public class Utilisateur {
     private int id;
@@ -92,5 +93,25 @@ public class Utilisateur {
         } catch (Exception ex) {
             System.out.println(ex);
         }
+    }
+
+    public static Utilisateur getUtilisateurParId(int id) throws SQLException {
+        Connection conn = MySQLConnection.getConnexion();
+        Utilisateur utilisateur = null;
+
+        try {
+            PreparedStatement st = conn.prepareStatement("SELECT id, nom, prenom, login, mdp, estAdmin from utilisateur where id = ?");
+            st.setInt(1, id);
+            ResultSet utilisateurParId = st.executeQuery();
+
+            while (utilisateurParId.next()) {
+                utilisateur = new Utilisateur(utilisateurParId.getInt(1), utilisateurParId.getString(2), utilisateurParId.getString(3), utilisateurParId.getString(4), utilisateurParId.getString(5), utilisateurParId.getBoolean(6));
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        conn.close();
+
+        return utilisateur;
     }
 }

@@ -7,18 +7,17 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Vector;
+import java.util.*;
 
 public class PageUtilisateur {
     static Object[][] data;
     static String[] columnNames;
     static DefaultTableModel model = new DefaultTableModel(data, columnNames);
+    static Object[][] data1;
+    static String[] columnNames1;
+    static DefaultTableModel modelreservation = new DefaultTableModel(data1, columnNames1);
     static Media mediaSelected = null;
-    static JTextField txtDateDeb = new JTextField();
-    static JTextField txtDateFin = new JTextField();
+    static Reservation reservationSelected = null;
 
     public static void main(int[] idUtilisateur) throws SQLException {
         //creation du Jframe
@@ -27,18 +26,20 @@ public class PageUtilisateur {
         Dimension tailleMoniteur = Toolkit.getDefaultToolkit().getScreenSize();
         jf.setSize(tailleMoniteur.width, tailleMoniteur.height);
 
+        Utilisateur utilisateur = Utilisateur.getUtilisateurParId(idUtilisateur[0]);
+
         // label bienvenue
-        JLabel bienvenue = new JLabel("Bienvenue sur la page utiliateur ");
+        JLabel bienvenue = new JLabel("Bienvenue " + utilisateur.getPrenom() + " !");
         jf.setLayout(null);
-        bienvenue.setBounds(440, 70, 600, 130);
+        bienvenue.setBounds(50, 30, 500, 30);
         jf.add(bienvenue);
         bienvenue.setFont(new Font("Serif", Font.BOLD, 30));
         // Changer la couleur du texte
         bienvenue.setForeground(Color.DARK_GRAY);
 
-        JLabel jLabelCategorie = new JLabel("Catégorie de médias");
+        JLabel jLabelCategorie = new JLabel("Recherche par catégorie de médias");
         jLabelCategorie.setFont(new Font("Times New Roman", Font.PLAIN, 16));
-        jLabelCategorie.setBounds(50, 50, 200, 50);
+        jLabelCategorie.setBounds(50, 100, 200, 30);
         jf.getContentPane().add(jLabelCategorie);
 
         // Liste des categories media
@@ -52,13 +53,8 @@ public class PageUtilisateur {
 
         // Ajout Combo Box a la fenetre
         JComboBox<String> jComboBox = new JComboBox(modelCateg);
-        jComboBox.setBounds(50, 100, 300, 50);
+        jComboBox.setBounds(50, 130, 300, 50);
         jf.getContentPane().add(jComboBox);
-
-        JLabel jLabelChooseCategorie = new JLabel();
-        jLabelChooseCategorie.setFont(new Font("Times New Roman", Font.PLAIN, 16));
-        jLabelChooseCategorie.setBounds(50, 150, 300, 50);
-        jf.getContentPane().add(jLabelChooseCategorie);
 
         String[] enteteTabMedia = {"titre", "createur", "année de parution"};
         JTable tableMedias = new JTable(model) {
@@ -66,12 +62,11 @@ public class PageUtilisateur {
                 return false;
             }
         };
-
         tableMedias.getTableHeader().setReorderingAllowed(false);
         tableMedias.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
 
         JScrollPane MyScrollPane = new JScrollPane(tableMedias);
-        MyScrollPane.setBounds(50, 230, 520, 100);
+        MyScrollPane.setBounds(50, 200, 500, 100);
         MyScrollPane.setBorder(BorderFactory.createMatteBorder(2, 2, 2, 2, Color.blue));
         jf.add(MyScrollPane);
         MyScrollPane.setVisible(false);
@@ -125,26 +120,39 @@ public class PageUtilisateur {
 
         JLabel jLabelReservation = new JLabel("Mes réservations");
         jLabelReservation.setFont(new Font("Times New Roman", Font.PLAIN, 16));
-        jLabelReservation.setBounds(50, 300, 200, 50);
+        jLabelReservation.setBounds(800, 100, 200, 30);
         jf.getContentPane().add(jLabelReservation);
 
         ArrayList<Reservation> reservations = null;
         try {
-            reservations = Reservation.getMesReservations(idUtilisateur[0]);
+            reservations = Reservation.getMesReservations(utilisateur.getId());
         } catch (SQLException ex) {
             throw new RuntimeException(ex);
         }
 
-        String[] entete = {"Date début", "Date de fin"};
-        Object[][] reservationsUtilisateur = new Object[reservations.size()][entete.length];
+        String[] enteteReservation = {"Titre", "Id", "Date début", "Date de fin"};
+        JTable tableReservation = new JTable(modelreservation) {
+            public boolean editCellAt(int row, int column, java.util.EventObject e) {
+                return false;
+            }
+        };
+        Object[][] reservationsUtilisateur = new Object[reservations.size()][enteteReservation.length];
         for (int i = 0; i < reservations.size(); i++) {
-            for (int j = 0; j < entete.length; j++) {
+            for (int j = 0; j < enteteReservation.length; j++) {
                 switch (j) {
                     case 0 : {
-                        reservationsUtilisateur[i][j] = reservations.get(i).getDateDebut();
+                        reservationsUtilisateur[i][j] = Objects.requireNonNull(Media.findMediaById(reservations.get(i).getIdMedia())).getTitre();
                         break;
                     }
                     case 1 : {
+                        reservationsUtilisateur[i][j] = Objects.requireNonNull(Media.findMediaById(reservations.get(i).getIdMedia())).getId();
+                        break;
+                    }
+                    case 2 : {
+                        reservationsUtilisateur[i][j] = reservations.get(i).getDateDebut();
+                        break;
+                    }
+                    case 3 : {
                         reservationsUtilisateur[i][j] = reservations.get(i).getDateFin();
                         break;
                     }
@@ -152,19 +160,27 @@ public class PageUtilisateur {
             }
         }
 
-        JTable tableReservation = new JTable(reservationsUtilisateur, entete);
+        modelreservation = new DefaultTableModel(reservationsUtilisateur, enteteReservation);
+        modelreservation.fireTableDataChanged();
+        tableReservation.setModel(modelreservation);
+        //JTable tableReservation = new JTable(reservationsUtilisateur, enteteReservation);
+        tableReservation.getColumnModel().getColumn(1).setMinWidth(0);
+        tableReservation.getColumnModel().getColumn(1).setMaxWidth(0);
+        tableReservation.getColumnModel().getColumn(1).setPreferredWidth(0);
         tableReservation.setFont(new Font("Times New Roman", Font.PLAIN, 16));
-        tableReservation.setBounds(50, 400, 300, 150);
-        jf.getContentPane().add(tableReservation);
+        tableReservation.setBounds(800, 130, 400, 100);
+
+        JScrollPane scrollPaneReservation = new JScrollPane(tableReservation);
+        scrollPaneReservation.setBounds(800, 130, 500, 100);
+        scrollPaneReservation.setBorder(BorderFactory.createMatteBorder(2, 2, 2, 2, Color.blue));
+        jf.add(scrollPaneReservation);
+        scrollPaneReservation.setVisible(true);
+        //jf.getContentPane().add(tableReservation);
 
         JButton btnReserver = new JButton("Réserver");
         btnReserver.setFont(new Font("Times New Roman", Font.PLAIN, 16));
-        btnReserver.setBounds(400, 450, 100, 50);
+        btnReserver.setBounds(800, 250, 100, 50);
         jf.getContentPane().add(btnReserver);
-
-        JTextField txtIdMedia = new JTextField();
-        txtIdMedia.setBounds(500, 500, 100, 30);
-        jf.getContentPane().add(txtIdMedia);
 
         // Format d'affichage de la date
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
@@ -185,23 +201,83 @@ public class PageUtilisateur {
                 } catch (SQLException e) {
                     throw new RuntimeException(e);
                 }
-
-                if (tableMedias.getSelectedRow() > 0) {
-                    txtDateDeb.setBounds(600, 500, 100, 30);
-                    txtDateDeb.setText(dateDebReservation);
-                    txtDateDeb.setEnabled(false);
-                    jf.getContentPane().add(txtDateDeb);
-
-                    txtDateFin.setBounds(700, 500, 100, 30);
-                    txtDateFin.setText(dateFinReservation);
-                    txtDateFin.setEnabled(false);
-                    jf.getContentPane().add(txtDateFin);
-                }
             }
         });
 
         btnReserver.addActionListener(e -> {
-            Reservation.ajouterReservation(mediaSelected.getId(), idUtilisateur[0], dateDebReservation, dateFinReservation);
+            // aucun média n'est sélectionné
+            if (tableMedias.getSelectedRow() < 0) {
+                /*JDialog emptySelection = new JDialog(jf, "Aucun média selectionné");
+                JLabel label = new JLabel("Veuillez sélectionné un média pour le réserver.");
+                emptySelection.add(label);
+                emptySelection.setSize(500, 200);
+                emptySelection.setLocation(500, 200);
+                emptySelection.setVisible(true);
+                 */
+                JOptionPane.showMessageDialog(null, "Veuillez sélectionné un média pour le réserver.");
+
+            }
+            else {
+                try {
+                    Reservation.ajouterReservation(mediaSelected.getId(), utilisateur.getId(), dateDebReservation, dateFinReservation);
+                } catch (SQLException ex) {
+                    throw new RuntimeException(ex);
+                }
+
+                // Format d'affichage de la date pour l'utilisateur
+                SimpleDateFormat formatUser = new SimpleDateFormat("dd/MM/yyyy");
+
+                /*JDialog emptySelection = new JDialog(jf, "Média réservé !");
+                JLabel label = new JLabel("Vous venez de réserver le média : " + mediaSelected.getTitre() + " du " + formatUser.format(dateDeb) + " jusqu'au " + formatUser.format(dateFin));
+                emptySelection.add(label);
+                emptySelection.setSize(500, 200);
+                emptySelection.setLocation(500, 200);
+                emptySelection.setVisible(true);
+                 */
+                JOptionPane.showMessageDialog(null, "Vous venez de réserver le média : " + mediaSelected.getTitre() + " du " + formatUser.format(dateDeb) + " jusqu\'au " + formatUser.format(dateFin));
+
+            }
+        });
+
+        tableReservation.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+            public void valueChanged(ListSelectionEvent event) {
+                try {
+                    reservationSelected = Reservation.findReservation((int) tableReservation.getValueAt(tableReservation.getSelectedRow(), 1), utilisateur.getId(), (java.sql.Date) tableReservation.getValueAt(tableReservation.getSelectedRow(), 2), (java.sql.Date) tableReservation.getValueAt(tableReservation.getSelectedRow(), 3));
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        });
+
+        //button supprimer
+        JButton btnSupprimer = new JButton("Supprimer");
+        btnSupprimer.setBounds(800, 350, 100, 30);
+        jf.add(btnSupprimer);
+
+        System.out.println("count " + tableReservation.getRowCount());
+
+        btnSupprimer.addActionListener(e -> {
+            // aucune réservation n'est sélectionnée
+            if (tableReservation.getSelectedRow() < 0) {
+                /*JDialog emptySelection = new JDialog(jf, "Aucune réservation selectionnée");
+                JLabel label = new JLabel("Veuillez sélectionner une réservation pour la supprimer.");
+                emptySelection.add(label);
+                emptySelection.setSize(500, 200);
+                emptySelection.setLocation(500, 200);
+                emptySelection.setVisible(true);
+                 */
+                JOptionPane.showMessageDialog(null, "Veuillez sélectionner une réservation pour la supprimer.");
+            }
+            else {
+                try {
+                    Reservation.supprimerReservation(reservationSelected.getId());
+                } catch (SQLException ex) {
+                    throw new RuntimeException(ex);
+                }
+                System.out.println("count " + tableReservation.getRowCount() + " selected row " + tableReservation.getSelectedRow());
+                modelreservation.removeRow(tableReservation.getSelectedRow());
+                JOptionPane.showMessageDialog(null, "Vous avez bien supprimé la réservation");
+            }
         });
 
         jf.setVisible(true);
