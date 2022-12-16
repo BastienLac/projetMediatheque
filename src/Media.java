@@ -10,7 +10,6 @@ public abstract class Media {
     protected String createur;
     protected int anneeDeParution;
     protected int categorieId;
-
     protected Media(int id, String titre, String createur, int anneeDeParution, int categorie) {
         this.id = id;
         this.titre = titre;
