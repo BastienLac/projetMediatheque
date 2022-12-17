@@ -39,7 +39,7 @@ public class PageUtilisateur {
 
         JLabel jLabelCategorie = new JLabel("Recherche par catégorie de médias");
         jLabelCategorie.setFont(new Font("Times New Roman", Font.PLAIN, 16));
-        jLabelCategorie.setBounds(50, 100, 200, 30);
+        jLabelCategorie.setBounds(50, 100, 300, 30);
         jf.getContentPane().add(jLabelCategorie);
 
         // Liste des categories media
@@ -212,17 +212,27 @@ public class PageUtilisateur {
                 JOptionPane.showMessageDialog(null, "Veuillez sélectionné un média pour le réserver.");
             }
             else {
+                Reservation newReservation = new Reservation(mediaSelected.getId(), utilisateur.getId(), dateDebReservation, dateFinReservation);
                 try {
-                    Reservation.ajouterReservation(mediaSelected.getId(), utilisateur.getId(), dateDebReservation, dateFinReservation);
-                } catch (SQLException ex) {
+                    if (Reservation.existingReservation(newReservation, utilisateur.getId())) {
+                        JOptionPane.showMessageDialog(jf, "Une réservation exsite déjà pour ce média.","Réservation existante", JOptionPane.ERROR_MESSAGE);
+                        throw new ReservationExistanteException("Une réservation exsite déjà pour ce média.");
+                    } else {
+                        try {
+                            Reservation.ajouterReservation(newReservation);
+                        } catch (SQLException ex) {
+                            throw new RuntimeException(ex);
+                        }
+
+                        // Format d'affichage de la date pour l'utilisateur
+                        SimpleDateFormat formatUser = new SimpleDateFormat("dd/MM/yyyy");
+
+                        JOptionPane.showMessageDialog(null, "Vous venez de réserver le média : " + mediaSelected.getTitre() + " du " + formatUser.format(dateDeb) + " jusqu\'au " + formatUser.format(dateFin));
+                        modelReservation.addRow(new Object[]{mediaSelected.getTitre(), mediaSelected.getId(), dateDebReservation, dateFinReservation});
+                    }
+                } catch (SQLException | ReservationExistanteException ex) {
                     throw new RuntimeException(ex);
                 }
-
-                // Format d'affichage de la date pour l'utilisateur
-                SimpleDateFormat formatUser = new SimpleDateFormat("dd/MM/yyyy");
-
-                JOptionPane.showMessageDialog(null, "Vous venez de réserver le média : " + mediaSelected.getTitre() + " du " + formatUser.format(dateDeb) + " jusqu\'au " + formatUser.format(dateFin));
-                modelReservation.addRow(new Object[]{mediaSelected.getTitre(), mediaSelected.getId(), dateDebReservation, dateFinReservation});
             }
         });
 
@@ -231,7 +241,8 @@ public class PageUtilisateur {
             @Override
             public void mouseClicked(MouseEvent m) {
                 try {
-                    reservationSelected = Reservation.findReservation((int) tableReservation.getValueAt(tableReservation.getSelectedRow(), 1), utilisateur.getId(), (String) tableReservation.getValueAt(tableReservation.getSelectedRow(), 2), (String) tableReservation.getValueAt(tableReservation.getSelectedRow(), 3));
+                    Reservation r = new Reservation((int) tableReservation.getValueAt(tableReservation.getSelectedRow(), 1), utilisateur.getId(), (String) tableReservation.getValueAt(tableReservation.getSelectedRow(), 2), (String) tableReservation.getValueAt(tableReservation.getSelectedRow(), 3));
+                    reservationSelected = Reservation.findReservation(r);
                 } catch (SQLException e) {
                     throw new RuntimeException(e);
                 }
