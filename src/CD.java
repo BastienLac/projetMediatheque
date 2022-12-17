@@ -10,7 +10,6 @@ public class CD extends Media {
         super(id, titre, createur, anneeDeParution, categorie);
         this.nombreChanson = nombreChanson;
     }
-
     protected static ArrayList<Media> getAll() throws SQLException {
         Connection conn = MySQLConnection.getConnexion();
         ArrayList<Media> allmedia = new ArrayList<>();
@@ -29,10 +28,10 @@ public class CD extends Media {
         return allmedia;
     }
 
+
     protected static ArrayList<Media> getMediaParCategorie(int idCateg) throws SQLException {
         Connection conn = MySQLConnection.getConnexion();
         ArrayList<Media> mediasParCateg = new ArrayList<>();
-
         try {
             PreparedStatement st = conn.prepareStatement("SELECT m.id, m.titre, m.createur, m.anneeDeParution, m.idCategorieMedia, c.id, c.nombreChanson FROM media m inner join cd c on m.id = c.id WHERE m.id IN (SELECT id from cd) and m.idCategorieMedia = ?");
             st.setInt(1, idCateg);
@@ -50,7 +49,6 @@ public class CD extends Media {
 
         return mediasParCateg;
     }
-
     public static void ajouterCD() {
         String nbChansonText = PageAdmin.nbChanson.getText();
         try {
