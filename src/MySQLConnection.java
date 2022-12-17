@@ -1,7 +1,7 @@
 import java.sql.*;
 
 public class MySQLConnection {
-    public static String lien = "jdbc:mysql://localhost:3306/mediatheque";
+    public static String lien = "jdbc:mysql://localhost:3306/mediatheque?autoReconnect=true&useSSL=false";
     public static String utilisateur = "root";
     public static Connection getConnexion(){
         try

@@ -3,16 +3,15 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.sql.Date;
 
 public class Reservation {
     private int id;
     private int idMedia;
     private int idUtilisateur;
-    private Date dateDebut;
-    private Date dateFin;
+    private String dateDebut;
+    private String dateFin;
 
-    public Reservation(int id, int idMedia, int idUtilisateur, Date dateDebut, Date dateFin) {
+    public Reservation(int id, int idMedia, int idUtilisateur, String dateDebut, String dateFin) {
         this.id = id;
         this.idMedia = idMedia;
         this.idUtilisateur = idUtilisateur;
@@ -27,11 +26,11 @@ public class Reservation {
     public int getIdUtilisateur() {
         return idUtilisateur;
     }
-    public Date getDateDebut() {
+    public String getDateDebut() {
         return dateDebut;
     }
 
-    public Date getDateFin() {
+    public String getDateFin() {
         return dateFin;
     }
 
@@ -44,7 +43,7 @@ public class Reservation {
             ResultSet reservations = st.executeQuery();
 
             while(reservations.next()) {
-                Reservation reservation = new Reservation(reservations.getInt(4), reservations.getInt(1), reservations.getInt(5), reservations.getDate(6), reservations.getDate(7));
+                Reservation reservation = new Reservation(reservations.getInt(4), reservations.getInt(1), reservations.getInt(5), reservations.getString(6), reservations.getString(7));
                 mesReservations.add(reservation);
             }
         }
@@ -56,7 +55,7 @@ public class Reservation {
         return mesReservations;
     }
 
-    public static Reservation findReservation(int idMedia, int idUtilisateur, Date dateDeb, Date dateFin) throws SQLException {
+    public static Reservation findReservation(int idMedia, int idUtilisateur, String dateDeb, String dateFin) throws SQLException {
         for (int i = 0; i < Reservation.getMesReservations(idUtilisateur).size(); i++) {
             Reservation reservation = Reservation.getMesReservations(idUtilisateur).get(i);
             if (idMedia == reservation.getIdMedia() && idUtilisateur == reservation.getIdUtilisateur() && dateDeb.equals(reservation.getDateDebut()) && dateFin.equals(reservation.getDateFin())) {
