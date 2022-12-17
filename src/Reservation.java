@@ -3,16 +3,22 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.sql.Date;
 
 public class Reservation {
     private int id;
     private int idMedia;
     private int idUtilisateur;
-    private Date dateDebut;
-    private Date dateFin;
+    private String dateDebut;
+    private String dateFin;
 
-    public Reservation(int id, int idMedia, int idUtilisateur, Date dateDebut, Date dateFin) {
+    public Reservation(int idMedia, int idUtilisateur, String dateDebut, String dateFin) {
+        this.idMedia = idMedia;
+        this.idUtilisateur = idUtilisateur;
+        this.dateDebut = dateDebut;
+        this.dateFin = dateFin;
+    }
+
+    public Reservation(int id, int idMedia, int idUtilisateur, String dateDebut, String dateFin) {
         this.id = id;
         this.idMedia = idMedia;
         this.idUtilisateur = idUtilisateur;
@@ -27,14 +33,20 @@ public class Reservation {
     public int getIdUtilisateur() {
         return idUtilisateur;
     }
-    public Date getDateDebut() {
+    public String getDateDebut() {
         return dateDebut;
     }
 
-    public Date getDateFin() {
+    public String getDateFin() {
         return dateFin;
     }
 
+    /**
+     *
+     * @param idUtilisateur {int} id de l'utilisateur
+     * @return {ArrayList<Reservation>} Renvoie la liste des réservations de l'utilisateur
+     * @throws SQLException
+     */
     public static ArrayList<Reservation> getMesReservations(int idUtilisateur) throws SQLException {
         Connection conn = MySQLConnection.getConnexion();
         ArrayList<Reservation> mesReservations = new ArrayList<>();
@@ -44,7 +56,7 @@ public class Reservation {
             ResultSet reservations = st.executeQuery();
 
             while(reservations.next()) {
-                Reservation reservation = new Reservation(reservations.getInt(4), reservations.getInt(1), reservations.getInt(5), reservations.getDate(6), reservations.getDate(7));
+                Reservation reservation = new Reservation(reservations.getInt(4), reservations.getInt(1), reservations.getInt(5), reservations.getString(6), reservations.getString(7));
                 mesReservations.add(reservation);
             }
         }
@@ -56,24 +68,36 @@ public class Reservation {
         return mesReservations;
     }
 
-    public static Reservation findReservation(int idMedia, int idUtilisateur, Date dateDeb, Date dateFin) throws SQLException {
-        for (int i = 0; i < Reservation.getMesReservations(idUtilisateur).size(); i++) {
-            Reservation reservation = Reservation.getMesReservations(idUtilisateur).get(i);
-            if (idMedia == reservation.getIdMedia() && idUtilisateur == reservation.getIdUtilisateur() && dateDeb.equals(reservation.getDateDebut()) && dateFin.equals(reservation.getDateFin())) {
-                return Reservation.getMesReservations(idUtilisateur).get(i);
+    /**
+     *
+     * @param r {Reservation} La réservation a trouver
+     * @return {Reservation|null} La réservation existe dans mesReservation. null sinon
+     * @throws SQLException
+     */
+    public static Reservation findReservation(Reservation r) throws SQLException {
+        for (int i = 0; i < Reservation.getMesReservations(r.getIdUtilisateur()).size(); i++) {
+            Reservation reservation = Reservation.getMesReservations(r.getIdUtilisateur()).get(i);
+            if (r.getIdMedia() == reservation.getIdMedia() && r.getIdUtilisateur() == reservation.getIdUtilisateur() && r.getDateDebut().equals(reservation.getDateDebut()) && r.getDateFin().equals(reservation.getDateFin())) {
+                return Reservation.getMesReservations(r.getIdUtilisateur()).get(i);
             }
         }
         return null;
     }
 
-    public static void ajouterReservation(int idMedia, int idUtilisateur, String dateDeb, String dateFin) throws SQLException {
+    /**
+     *
+     * @param r {Reservation} la réservation a ajouter
+     * @apiNote permet d'ajouter une réservation
+     * @throws SQLException
+     */
+    public static void ajouterReservation(Reservation r) throws SQLException {
         Connection conn = MySQLConnection.getConnexion();
         try {
             PreparedStatement st = conn.prepareStatement("INSERT INTO reservation (idMedia, idUtilisateur, dateDeb, dateFin) VALUES (?, ?, ?, ?);");
-            st.setInt(1, idMedia);
-            st.setInt(2, idUtilisateur);
-            st.setString(3, dateDeb);
-            st.setString(4, dateFin);
+            st.setInt(1, r.getIdMedia());
+            st.setInt(2, r.getIdUtilisateur());
+            st.setString(3, r.getDateDebut());
+            st.setString(4, r.getDateFin());
             st.executeUpdate();
         } catch (Exception exception) {
             System.out.println(exception);
@@ -81,6 +105,12 @@ public class Reservation {
         conn.close();
     }
 
+    /**
+     *
+     * @param idReservation {int} id de la réservation
+     * @apiNote Permet de supprimer une réservation
+     * @throws SQLException
+     */
     public static void supprimerReservation(int idReservation) throws SQLException {
         Connection conn = MySQLConnection.getConnexion();
         try {
@@ -91,5 +121,22 @@ public class Reservation {
             System.out.println(e);
         }
         conn.close();
+    }
+
+    /**
+     *
+     * @param r {Reservation} - La réservation de l'utilisateur
+     * @param idUtilisateur {int} - id de l'utilisateur
+     * @return {boolean} true si l'utilisateur a déjà réservé ce média. false sinon
+     * @throws SQLException
+     */
+    public static boolean existingReservation(Reservation r, int idUtilisateur) throws SQLException {
+        for (int i = 0; i < Reservation.getMesReservations(idUtilisateur).size(); i++) {
+            if (Reservation.getMesReservations(idUtilisateur).get(i).getIdMedia() == r.getIdMedia()
+                && Reservation.getMesReservations(idUtilisateur).get(i).getIdUtilisateur() == r.getIdUtilisateur()){
+                    return true;
+            }
+        }
+        return false;
     }
 }
