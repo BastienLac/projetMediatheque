@@ -68,7 +68,7 @@ public class ConnexionBoutonListener implements ActionListener {
                 }
             }
             else
-                txtLogin.setText("TES PAS CO");
+                JOptionPane.showMessageDialog(null, "Erreur ! Veuillez verifier vos identifiants puis reessayez");
         } else if (s.equals("S'inscrire")) {
             InscriptionPage.main();
         } else if (s.equals("Valider")) {

@@ -44,12 +44,8 @@ public class PageUtilisateur {
 
         // Liste des categories media
         ArrayList<CategorieMedia> allCategorie = CategorieMedia.getAllCategorie();
-<<<<<<< HEAD
         String[] categories = new String[allCategorie.size()];
         Vector modelCateg = new Vector<>();
-=======
-        String[] categories = new String[(allCategorie.toArray().length)];
->>>>>>> mohamad
         for (int i = 0; i < categories.length; i++) {
             modelCateg.add(i, allCategorie.get(i).getNom());
             categories[i] = allCategorie.get(i).getNom();

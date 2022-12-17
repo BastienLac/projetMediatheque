@@ -273,10 +273,11 @@ public class PageAdmin {
                             if (Integer.parseInt(categorie.getText()) <= 5 && Integer.parseInt(categorie.getText()) >= 1) {
                                 Media.ajouterMedia();
                                 CD.ajouterCD();
-                                check.set(true);
                                 JOptionPane.showMessageDialog(null, "Votre " + typeSelectede + " a ete bien ajoute");
+                                check.set(true);
                             } else {
                                 JOptionPane.showMessageDialog(null, "Entrez l'id d'une categorie disponible !");
+                                check.set(false);
                             }
                         }
                     } else if (typeSelectede.equals("DVD")) {
@@ -290,6 +291,7 @@ public class PageAdmin {
                                 check.set(true);
                             } else {
                                 JOptionPane.showMessageDialog(null, "Entrez l'id d'une categorie disponible !");
+                                check.set(false);
                             }
                         }
                     } else if (typeSelectede.equals("JeuVideo")) {
@@ -303,6 +305,7 @@ public class PageAdmin {
                                 check.set(true);
                             } else {
                                 JOptionPane.showMessageDialog(null, "Entrez l'id d'une categorie disponible !");
+                                check.set(false);
                             }
                         }
                     } else if (typeSelectede.equals("Livre")) {
@@ -316,6 +319,7 @@ public class PageAdmin {
                                 check.set(true);
                             } else {
                                 JOptionPane.showMessageDialog(null, "Entrez l'id d'une categorie disponible !");
+                                check.set(false);
                             }
                         }
                     }

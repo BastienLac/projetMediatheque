@@ -28,10 +28,6 @@ public class DVD extends Media {
         conn.close();
         return allmedia;
     }
-<<<<<<< HEAD
-
-=======
->>>>>>> mohamad
     protected static ArrayList<Media> getMediaParCategorie(int idCateg) throws SQLException {
         Connection conn = MySQLConnection.getConnexion();
         ArrayList<Media> mediasParCateg = new ArrayList<>();

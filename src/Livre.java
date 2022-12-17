@@ -19,7 +19,7 @@ public class Livre extends Media {
             PreparedStatement st = conn.prepareStatement("SELECT m.id, m.titre, m.createur, m.anneeDeParution, m.idCategorieMedia, l.id, l.nombrePage FROM media m inner join livre l on m.id = l.id WHERE m.id IN (SELECT id from livre);");
             ResultSet livres = st.executeQuery();
             while(livres.next()) {
-                Media livre = new livre(livres.getInt(1), livres.getString(2), livres.getString(3), livres.getInt(4), livres.getInt(5), livres.getInt(7));
+                Media livre = new Livre(livres.getInt(1), livres.getString(2), livres.getString(3), livres.getInt(4), livres.getInt(5), livres.getInt(7));
                 allmedia.add(livre);
             }
         }
