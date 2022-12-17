@@ -17,6 +17,13 @@ public abstract class Media {
         this.anneeDeParution = anneeDeParution;
         this.categorieId = categorie;
     }
+
+    /**
+     *
+     * @param idCateg {int} id de la catégorie
+     * @return les médias de la catégorie passée en paramètre
+     * @throws SQLException
+     */
     protected static ArrayList<Media> getMediaParCategorie(int idCateg) throws SQLException {
         ArrayList<Media> allMedias = new ArrayList<>();
         if (CD.getMediaParCategorie(idCateg).size() > 0){
@@ -37,6 +44,11 @@ public abstract class Media {
         return allMedias;
     };
 
+    /**
+     *
+     * @return tous les médias
+     * @throws SQLException
+     */
     protected static ArrayList<Media> getAll() throws SQLException {
         ArrayList<Media> allMedias = new ArrayList<>();
         if (CD.getAll().size() > 0){
@@ -57,6 +69,9 @@ public abstract class Media {
         return allMedias;
     }
 
+    /**
+     * Supprime un média
+     */
     public static void supprimerMedia() {
         try {
           Connection conn = MySQLConnection.getConnexion();
@@ -70,6 +85,9 @@ public abstract class Media {
         }
     }
 
+    /**
+     * Ajoute un média
+     */
     public static void ajouterMedia() {
         String mediaTitre = PageAdmin.titre.getText();
         String mediaCreateur = PageAdmin.createur.getText();
@@ -95,6 +113,10 @@ public abstract class Media {
         }
     }
 
+    /**
+     *
+     * @return Récupère l'id du média
+     */
     public static String recupererID() {
         ArrayList<String> arrayList = new ArrayList<String>();
         try {
@@ -113,6 +135,11 @@ public abstract class Media {
         return arrayList.get(PageAdmin.model.getRowCount()-1);
     }
 
+    /**
+     *
+     * @param id {int} id du média
+     * @return le type de média
+     */
     public static String recupererType(int id) {
         int idType = 0;
         try {
@@ -197,6 +224,14 @@ public abstract class Media {
         return "Pas de type";
     }
 
+    /**
+     *
+     * @param titre {String} titre média
+     * @param createur {String} createur média
+     * @param anneDeParution {int} année de parution du média
+     * @return le média corrspondant aux paramètres
+     * @throws SQLException
+     */
     public static Media findMedia(String titre, String createur, int anneDeParution) throws SQLException {
         for (int i = 0; i < Media.getAll().size(); i++) {
             if (titre.equals(Media.getAll().get(i).getTitre()) && createur.equals(Media.getAll().get(i).getCreateur()) && anneDeParution == Media.getAll().get(i).getAnneeDeParution()) {
@@ -206,6 +241,12 @@ public abstract class Media {
         return null;
     }
 
+    /**
+     *
+     * @param id {int} id média
+     * @return {Media|null} Le média corrspondant à l'id. sinon null
+     * @throws SQLException
+     */
     public static Media findMediaById(int id) throws SQLException {
         for (int i = 0; i < Media.getAll().size(); i++) {
             if (id == Media.getAll().get(i).getId()) {
