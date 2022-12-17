@@ -10,6 +10,11 @@ public class CD extends Media {
         super(id, titre, createur, anneeDeParution, categorie);
         this.nombreChanson = nombreChanson;
     }
+    /**
+     * selectionne tous les CD
+     * @return tous les CD presents dans la base de donnees
+     * @throws SQLException
+     */
     protected static ArrayList<Media> getAll() throws SQLException {
         Connection conn = MySQLConnection.getConnexion();
         ArrayList<Media> allmedia = new ArrayList<>();
@@ -27,8 +32,12 @@ public class CD extends Media {
         conn.close();
         return allmedia;
     }
-
-
+    /**
+     * selectionne tous les dvd par categorie
+     * @param idCateg
+     * @return tous les dvd trouvés dans la bdd
+     * @throws SQLException
+     */
     protected static ArrayList<Media> getMediaParCategorie(int idCateg) throws SQLException {
         Connection conn = MySQLConnection.getConnexion();
         ArrayList<Media> mediasParCateg = new ArrayList<>();
@@ -49,6 +58,9 @@ public class CD extends Media {
 
         return mediasParCateg;
     }
+    /**
+     * insert un nouveau CD a la bdd
+     */
     public static void ajouterCD() {
         String nbChansonText = PageAdmin.nbChanson.getText();
         try {

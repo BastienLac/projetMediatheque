@@ -11,7 +11,11 @@ public class Livre extends Media {
         super(id, titre, createur, anneeDeParution, categorie);
         this.nombrePage = nombrePage;
     }
-
+    /**
+     * selectionne tous les dvd
+     * @return tous les dvd presents dans la base de donnees
+     * @throws SQLException
+     */
     protected static ArrayList<Media> getAll() throws SQLException {
         Connection conn = MySQLConnection.getConnexion();
         ArrayList<Media> allmedia = new ArrayList<>();
@@ -29,7 +33,9 @@ public class Livre extends Media {
         conn.close();
         return allmedia;
     }
-
+    /**
+     * insert un nouveau livre a la bdd
+     */
     public static void ajouterLivre()  {
         String nbPagesText = PageAdmin.nbPages.getText();
         try {
@@ -43,6 +49,12 @@ public class Livre extends Media {
         }
     }
 
+    /**
+     * selectionne tous les livres par categorie
+     * @param idCateg
+     * @return tous les livres trouvés dans la bdd
+     * @throws SQLException
+     */
     protected static ArrayList<Media> getMediaParCategorie(int idCateg) throws SQLException {
         Connection conn = MySQLConnection.getConnexion();
         ArrayList<Media> mediasParCateg = new ArrayList<>();

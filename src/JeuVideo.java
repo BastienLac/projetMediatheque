@@ -11,6 +11,11 @@ public class JeuVideo extends Media {
         this.console = console;
     }
 
+    /**
+     *
+     * @return tous les JEUVIDEO présents dans la base de donneés
+     * @throws SQLException
+     */
     protected static ArrayList<Media> getAll() throws SQLException {
         Connection conn = MySQLConnection.getConnexion();
         ArrayList<Media> allmedia = new ArrayList<>();
@@ -29,6 +34,12 @@ public class JeuVideo extends Media {
         return allmedia;
     }
 
+    /**
+     *
+     * @param idCateg
+     * @return tableau contenant tous les JEUVIDEO de la catégorie en question
+     * @throws SQLException
+     */
     protected static ArrayList<Media> getMediaParCategorie(int idCateg) throws SQLException {
         Connection conn = MySQLConnection.getConnexion();
         ArrayList<Media> mediasParCateg = new ArrayList<>();
@@ -50,6 +61,9 @@ public class JeuVideo extends Media {
         return mediasParCateg;
     }
 
+    /**
+     * cette fonction insert un nouveau jeuvideo en fonction de l'id du média récupéré
+     */
     public static void ajouterJV()  {
         String consoleText = PageAdmin.console.getText();
         try {
