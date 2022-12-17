@@ -56,7 +56,7 @@ public class PageUtilisateur {
         jComboBox.setBounds(50, 130, 300, 50);
         jf.getContentPane().add(jComboBox);
 
-        String[] enteteTabMedia = {"titre", "createur", "annee de parution"};
+        String[] enteteTabMedia = {"Titre", "Createur", "Annee de parution"};
         JTable tableMedias = new JTable(model) {
             public boolean editCellAt(int row, int column, java.util.EventObject e) {
                 return false;
@@ -209,14 +209,14 @@ public class PageUtilisateur {
         btnReserver.addActionListener(e -> {
             // aucun média n'est sélectionné
             if (tableMedias.getSelectedRow() < 0) {
-                JOptionPane.showMessageDialog(null, "Veuillez selectionne un media pour le reserver.");
+                JOptionPane.showMessageDialog(null, "Veuillez selectionner un media pour le reserver.");
             }
             else {
                 Reservation newReservation = new Reservation(mediaSelected.getId(), utilisateur.getId(), dateDebReservation, dateFinReservation);
                 try {
                     if (Reservation.existingReservation(newReservation, utilisateur.getId())) {
-                        JOptionPane.showMessageDialog(jf, "Une reservation exsite dejà pour ce media.","Reservation existante", JOptionPane.ERROR_MESSAGE);
-                        throw new ReservationExistanteException("Une reservation exsite dejà pour ce media.");
+                        JOptionPane.showMessageDialog(jf, "Une reservation existe deja pour ce media.","Reservation existante", JOptionPane.ERROR_MESSAGE);
+                        throw new ReservationExistanteException("Une reservation existe deja pour ce media.");
                     } else {
                         try {
                             Reservation.ajouterReservation(newReservation);

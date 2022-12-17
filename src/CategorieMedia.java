@@ -19,6 +19,10 @@ public class CategorieMedia {
         return nom;
     }
 
+    /**
+     * Permet de récuperer toutes les catégories de média de la base de données
+     * @return {CategorieMedia} Liste de catégories de média
+     */
     public static ArrayList<CategorieMedia> getAllCategorie() throws SQLException {
         Connection conn = MySQLConnection.getConnexion();
         ArrayList<CategorieMedia> allCategorie = new ArrayList<>();
@@ -39,6 +43,11 @@ public class CategorieMedia {
         return allCategorie;
     }
 
+    /**
+     * Permet de retourner une catégorie selon un nom passé en paramètre
+     * @param {string} nomCateg - nom de la catégorie voulue
+     * @return {Categorie} La catégorie correspondante au nom
+     */
     public static CategorieMedia getCategorieParNom(String nomCateg) throws SQLException {
         Connection conn = MySQLConnection.getConnexion();
         CategorieMedia maCategorie = null;

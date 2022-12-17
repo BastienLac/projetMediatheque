@@ -45,7 +45,7 @@ public class Utilisateur {
     }
 
     /**
-     *
+     * Permet de récuperer un utilisateur correspondant aux informations fournies
      * @param {string} unLogin - Login de l'utilisateur
      * @param {string} unMDP - Mot de passe de l'utilisateur
      * @return {Utilisateur|null} L'utilisateur correspondant aux informations fournies. Null sinon.
@@ -95,6 +95,11 @@ public class Utilisateur {
         }
     }
 
+    /**
+     * Retourne un utilisateur correspondant à un id
+     * @param {int} id - L'id de l'utilisateur voulu
+     * @return {Utilisateur} - L'utilisateur correspondant à l'id
+     */
     public static Utilisateur getUtilisateurParId(int id) throws SQLException {
         Connection conn = MySQLConnection.getConnexion();
         Utilisateur utilisateur = null;
