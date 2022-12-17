@@ -33,7 +33,7 @@ public class PageAdmin {
         adminpage.setSize(tailleMoniteur.width, tailleMoniteur.height);
 
         // label bienvenue
-        JLabel bienvenue = new JLabel("Bienvenue a la page administrateur ");
+        JLabel bienvenue = new JLabel("Bienvenue sur la page administrateur ");
         adminpage.setLayout(null);
         bienvenue.setBounds(440, 70, 600, 130);
         adminpage.add(bienvenue);
@@ -273,7 +273,7 @@ public class PageAdmin {
                             if (Integer.parseInt(categorie.getText()) <= 5 && Integer.parseInt(categorie.getText()) >= 1) {
                                 Media.ajouterMedia();
                                 CD.ajouterCD();
-                                JOptionPane.showMessageDialog(null, "Votre " + typeSelectede + " a ete bien ajoute");
+                                JOptionPane.showMessageDialog(null, "Votre " + typeSelectede + " a bien ete ajoute");
                                 check.set(true);
                             } else {
                                 JOptionPane.showMessageDialog(null, "Entrez l'id d'une categorie disponible !");
@@ -287,7 +287,7 @@ public class PageAdmin {
                             if (Integer.parseInt(categorie.getText()) <= 5 && Integer.parseInt(categorie.getText()) >= 1) {
                                 Media.ajouterMedia();
                                 DVD.ajouterDVD();
-                                JOptionPane.showMessageDialog(null, "Votre " + typeSelectede + " a ete bien ajoute");
+                                JOptionPane.showMessageDialog(null, "Votre " + typeSelectede + " a bien ete ajoute");
                                 check.set(true);
                             } else {
                                 JOptionPane.showMessageDialog(null, "Entrez l'id d'une categorie disponible !");
@@ -301,7 +301,7 @@ public class PageAdmin {
                             if (Integer.parseInt(categorie.getText()) <= 5 && Integer.parseInt(categorie.getText()) >= 1) {
                                 Media.ajouterMedia();
                                 JeuVideo.ajouterJV();
-                                JOptionPane.showMessageDialog(null, "Votre " + typeSelectede + " a ete bien ajoute");
+                                JOptionPane.showMessageDialog(null, "Votre " + typeSelectede + " a bien ete ajoute");
                                 check.set(true);
                             } else {
                                 JOptionPane.showMessageDialog(null, "Entrez l'id d'une categorie disponible !");
@@ -315,7 +315,7 @@ public class PageAdmin {
                             if (Integer.parseInt(categorie.getText()) <= 5 && Integer.parseInt(categorie.getText()) >= 1) {
                                 Media.ajouterMedia();
                                 Livre.ajouterLivre();
-                                JOptionPane.showMessageDialog(null, "Votre " + typeSelectede + " a ete bien ajoute");
+                                JOptionPane.showMessageDialog(null, "Votre " + typeSelectede + " a bien ete ajoute");
                                 check.set(true);
                             } else {
                                 JOptionPane.showMessageDialog(null, "Entrez l'id d'une categorie disponible !");
