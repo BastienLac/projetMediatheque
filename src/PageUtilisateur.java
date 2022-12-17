@@ -37,7 +37,7 @@ public class PageUtilisateur {
         // Changer la couleur du texte
         bienvenue.setForeground(Color.DARK_GRAY);
 
-        JLabel jLabelCategorie = new JLabel("Recherche par catégorie de médias");
+        JLabel jLabelCategorie = new JLabel("Recherche par categorie de medias");
         jLabelCategorie.setFont(new Font("Times New Roman", Font.PLAIN, 16));
         jLabelCategorie.setBounds(50, 100, 300, 30);
         jf.getContentPane().add(jLabelCategorie);
@@ -56,7 +56,7 @@ public class PageUtilisateur {
         jComboBox.setBounds(50, 130, 300, 50);
         jf.getContentPane().add(jComboBox);
 
-        String[] enteteTabMedia = {"titre", "createur", "année de parution"};
+        String[] enteteTabMedia = {"titre", "createur", "annee de parution"};
         JTable tableMedias = new JTable(model) {
             public boolean editCellAt(int row, int column, java.util.EventObject e) {
                 return false;
@@ -118,7 +118,7 @@ public class PageUtilisateur {
             }
         });
 
-        JLabel jLabelReservation = new JLabel("Mes réservations");
+        JLabel jLabelReservation = new JLabel("Mes reservations");
         jLabelReservation.setFont(new Font("Times New Roman", Font.PLAIN, 16));
         jLabelReservation.setBounds(800, 100, 200, 30);
         jf.getContentPane().add(jLabelReservation);
@@ -130,7 +130,7 @@ public class PageUtilisateur {
             throw new RuntimeException(ex);
         }
 
-        String[] enteteReservation = {"Titre", "Id", "Date début", "Date de fin"};
+        String[] enteteReservation = {"Titre", "Id", "Date debut", "Date de fin"};
 
         Object[][] reservationsUtilisateur = new Object[reservations.size()][enteteReservation.length];
         for (int i = 0; i < reservations.size(); i++) {
@@ -179,7 +179,7 @@ public class PageUtilisateur {
         jf.add(scrollPaneReservation);
         scrollPaneReservation.setVisible(true);
 
-        JButton btnReserver = new JButton("Réserver");
+        JButton btnReserver = new JButton("Reserver");
         btnReserver.setFont(new Font("Times New Roman", Font.PLAIN, 16));
         btnReserver.setBounds(800, 250, 100, 30);
         jf.getContentPane().add(btnReserver);
@@ -209,14 +209,14 @@ public class PageUtilisateur {
         btnReserver.addActionListener(e -> {
             // aucun média n'est sélectionné
             if (tableMedias.getSelectedRow() < 0) {
-                JOptionPane.showMessageDialog(null, "Veuillez sélectionné un média pour le réserver.");
+                JOptionPane.showMessageDialog(null, "Veuillez selectionne un media pour le reserver.");
             }
             else {
                 Reservation newReservation = new Reservation(mediaSelected.getId(), utilisateur.getId(), dateDebReservation, dateFinReservation);
                 try {
                     if (Reservation.existingReservation(newReservation, utilisateur.getId())) {
-                        JOptionPane.showMessageDialog(jf, "Une réservation exsite déjà pour ce média.","Réservation existante", JOptionPane.ERROR_MESSAGE);
-                        throw new ReservationExistanteException("Une réservation exsite déjà pour ce média.");
+                        JOptionPane.showMessageDialog(jf, "Une reservation exsite dejà pour ce media.","Reservation existante", JOptionPane.ERROR_MESSAGE);
+                        throw new ReservationExistanteException("Une reservation exsite dejà pour ce media.");
                     } else {
                         try {
                             Reservation.ajouterReservation(newReservation);
@@ -227,7 +227,7 @@ public class PageUtilisateur {
                         // Format d'affichage de la date pour l'utilisateur
                         SimpleDateFormat formatUser = new SimpleDateFormat("dd/MM/yyyy");
 
-                        JOptionPane.showMessageDialog(null, "Vous venez de réserver le média : " + mediaSelected.getTitre() + " du " + formatUser.format(dateDeb) + " jusqu\'au " + formatUser.format(dateFin));
+                        JOptionPane.showMessageDialog(null, "Vous venez de reserver le media : " + mediaSelected.getTitre() + " du " + formatUser.format(dateDeb) + " jusqu\'au " + formatUser.format(dateFin));
                         modelReservation.addRow(new Object[]{mediaSelected.getTitre(), mediaSelected.getId(), dateDebReservation, dateFinReservation});
                     }
                 } catch (SQLException | ReservationExistanteException ex) {
@@ -257,7 +257,7 @@ public class PageUtilisateur {
         btnSupprimer.addActionListener(e -> {
             // aucune réservation n'est sélectionnée
             if (tableReservation.getSelectedRow() < 0) {
-                JOptionPane.showMessageDialog(null, "Veuillez sélectionner une réservation pour la supprimer.");
+                JOptionPane.showMessageDialog(null, "Veuillez selectionner une reservation pour la supprimer.");
             }
             else {
                 try {
@@ -266,7 +266,7 @@ public class PageUtilisateur {
                     throw new RuntimeException(ex);
                 }
                 modelReservation.removeRow(tableReservation.getSelectedRow());
-                JOptionPane.showMessageDialog(null, "Vous avez bien supprimé la réservation");
+                JOptionPane.showMessageDialog(null, "Vous avez bien supprime la reservation");
             }
         });
 
